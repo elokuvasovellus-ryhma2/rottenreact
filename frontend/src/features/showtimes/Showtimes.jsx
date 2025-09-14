@@ -1,15 +1,17 @@
 import { useEffect, useState } from 'react'
-import './App.css'
 
-function App() {
+
+export function Showtimes() {
 
   //tilamuuttujat
   //areas lista kaikista finnkinon teattereista
   //shows lista valitun teatterin näytöksistä
   //selectedArea mikä alue on valittuna (id,merkkijono)
+  //nameInput mikä elokuva haetaan (merkkijono)
   const [areas, setAreas] = useState([])
   const [shows, setShows] = useState([])
   const [selectedArea, setSelectedArea] = useState('')
+  const [nameInput, setNameInput] = useState('')
 
   //pad varmistaa että kuukausi ja päivä on kahden numeron mittaisia
   //todayInput muodostaa päivämäärän yyyy-mm-dd.
@@ -106,6 +108,12 @@ function App() {
     }
   }
 
+  //käsittelee elokuvan nimen valinnan ja päivittää tilan
+  const handleNameChange = (e) => {
+    const newName = e.target.value
+    setNameInput(newName)
+  }
+
   //muuntaa päivämäärän tunneiksi ja minuuteiksi showtimeihin.
   const fmtTime = (iso) => {
     if (!iso) return ''
@@ -131,11 +139,23 @@ function App() {
         onChange={handleDateChange}
       />
 
+      <input
+        type="text"
+        placeholder="Hae elokuvan nimellä..."
+        value={nameInput}
+        onChange={handleNameChange}
+      />
+
       <ul>
         {
           shows.length === 0 && selectedArea
             ? <li>Ei näytöksiä valitulla päivällä.</li>
-            : shows.map(show => {
+            : shows
+                .filter(show => 
+                  nameInput === '' || 
+                  show.title.toLowerCase().includes(nameInput.toLowerCase())
+                )
+                .map(show => {
                 return (
                   <li key={show.id}>
                     {fmtTime(show.start)} — {show.title} ({show.theatre}{show.auditorium ? `, ${show.auditorium}` : ''})
@@ -148,4 +168,3 @@ function App() {
   )
 }
 
-export default App

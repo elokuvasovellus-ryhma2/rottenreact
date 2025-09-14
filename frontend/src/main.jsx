@@ -5,6 +5,7 @@ import './shared/components/Navbar.css'
 import './shared/components/Footer.css'
 import App from './App.jsx'
 
+
 createRoot(document.getElementById('root')).render(
   <StrictMode>
     <App />

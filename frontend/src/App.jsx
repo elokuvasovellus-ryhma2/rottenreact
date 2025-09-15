@@ -6,6 +6,7 @@ import { Reviews } from './features/reviews/Reviews';
 import { Favorites } from './features/favorites/Favorites';
 import { Groups } from './features/groups/Groups';
 import { Showtimes } from './features/showtimes/Showtimes';
+import { Movie_seach_results } from './features/movie_search_results/Movie_seach_results';
 
 function App() {
   return (
@@ -18,6 +19,7 @@ function App() {
             <Route path="/favorites" element={<Favorites />} />
             <Route path="/groups" element={<Groups />} />
             <Route path="/showtimes" element={<Showtimes />} />
+            <Route path="/movies_search_result" element={<Movie_seach_results />} />
           </Routes>
         </Layout>
       </BrowserRouter>

@@ -72,6 +72,19 @@ app.delete('/delete/:id', (req, res) => {
 })
 
 
+export const pool = openDb()
+
+import userRouter from './userRouter.js'
+app.use('/users', userRouter)
+
+app.use((err, req, res, next) => {
+  console.error(err)
+  const status = err.status || 500
+  res.status(status).json({ error: err.message || 'Server error' })
+})
+
+
+
 
 app.listen(port, () => {
  console.log(`Server is running on http://localhost:${port}`)

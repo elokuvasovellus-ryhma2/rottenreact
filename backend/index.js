@@ -3,11 +3,11 @@ import cors from 'cors'
 import pkg from 'pg'
 import dotenv from 'dotenv'
 
-const environment = process.env.NODE_ENV
+const environment = process.env.NODE_ENV || 'development'
 
 dotenv.config()
 
-const port = process.env.port
+const port = process.env.PORT
 const {Pool} = pkg
 
 const app = express()
@@ -16,14 +16,15 @@ app.use(express.json())
 app.use(express.urlencoded({extended:false}))
 
 
+
 const openDb = () => {
  const pool = new Pool({
- user:process.env.DB_USER,
- host:process.env.DB_HOST,
- database:environment ==="development"?process.env.DB_NAME:
+ user: process.env.DB_USER,
+ host: process.env.DB_HOST,
+ database: environment ==="development"?process.env.DB_NAME:
  process.env.DB_NAME,
- password:process.env.DB_PASSWORD,
- port:process.env_DB_PORT
+ password: process.env.DB_PASSWORD,
+ port: process.env_DB_PORT 
  })
 
  return pool
@@ -69,6 +70,8 @@ app.delete('/delete/:id', (req, res) => {
  return res.status(200).json({id:id})
  })
 })
+
+
 
 app.listen(port, () => {
  console.log(`Server is running on http://localhost:${port}`)

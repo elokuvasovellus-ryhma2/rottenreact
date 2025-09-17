@@ -1,9 +1,19 @@
-create table task (
- id serial primary key,
- description varchar(255) not null
+DROP TABLE IF EXISTS task;
+DROP TABLE IF EXISTS account;
+
+CREATE TABLE account (
+  id SERIAL PRIMARY KEY,
+  email VARCHAR(50) NOT NULL UNIQUE,
+  password VARCHAR(255) NOT NULL
 );
 
-insert into task (description) values
+CREATE TABLE task (
+  id SERIAL PRIMARY KEY,
+  description TEXT NOT NULL,
+  created_at TIMESTAMP DEFAULT NOW()
+);
+
+INSERT INTO task (description) VALUES
 ('Complete the project documentation'),
 ('Review the code changes'),
 ('Prepare for the team meeting'),

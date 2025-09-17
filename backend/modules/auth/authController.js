@@ -6,6 +6,11 @@ class AuthController {
     try {
       const { email, password } = req.body;
       
+      // Validate required fields
+      if (!email || !password) {
+        return res.status(400).json({ error: 'Email and password are required' });
+      }
+      
       // Check if user already exists
       const existingUser = await AuthModel.findByEmail(email);
       if (existingUser) {

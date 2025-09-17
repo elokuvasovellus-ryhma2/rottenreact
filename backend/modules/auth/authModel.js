@@ -3,6 +3,15 @@ const bcrypt = require('bcryptjs');
 
 class AuthModel {
   static async createUser({ email, password }) {
+    // For Debugging logging
+    console.log('Creating user with email:', email);
+    console.log('Password type:', typeof password);
+    console.log('Password length:', password ? password.length : 'undefined');
+    
+    if (!password) {
+      throw new Error('Password is required');
+    }
+    
     const password_hash = await bcrypt.hash(password, 10);
     const result = await pool.query(
       'INSERT INTO users (email, password_hash) VALUES ($1, $2) RETURNING id, email',

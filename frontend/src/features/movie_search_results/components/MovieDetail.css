@@ -1,0 +1,82 @@
+.movie-detail {
+    max-width: 800px;
+    margin: 20px auto;
+    padding: 20px;
+    background-color: rgba(0, 0, 0, 0.5);
+    border-radius: 8px;
+    box-shadow: 0 0 10px rgba(255, 255, 255, 0.5);
+}
+
+.movie-detail img {
+    height: 500px;
+    border-radius: 8px;
+    box-shadow: 0 0 10px rgba(255, 255, 255, 0.5);
+}
+
+.movie-detail h2 {
+    font-size: 2em;
+    margin-bottom: 10px;
+    color: #ffffff;
+}
+
+.movie-detail .movie-rating {
+    display: flex;
+    align-items: center;
+    margin-bottom: 10px;
+    color: var(--primary);
+    font-size: 1.5rem;
+}
+
+.movie-detail .movie-overview {
+    margin-bottom: 10px;
+    color: #ffffff;
+}
+
+.movie-detail .star-rating label {
+    margin: 10px 0;
+    color: #ffffff;
+    font-size: 1.5rem;
+}
+
+.movie-detail .star {
+    cursor: pointer;
+    font-size: 2em; 
+    color: #ff9800; 
+}
+
+.movie-detail .star ion-icon {
+    transition: color 0.2s ease;
+}
+
+.movie-detail .star:not(:last-child) {
+    margin-right: 5px; 
+}
+
+.movie-detail .star:hover {
+    color: #f5f5f5; 
+}
+
+.button-container {
+    margin: 20px;
+}
+
+.button-container button {
+    margin-right: 10px;
+    padding: 10px 15px;
+    font-size: 1em;
+    cursor: pointer;
+    border: none;
+    border-radius: 5px;
+    background-color: var(--primary);
+    color: #ffffff;
+    transition: background-color 0.3s;
+}
+
+.button-container button:hover {
+    background-color: #ffffff;
+    color: var(--primary);
+}
+
+.button-container .back-button ion-icon {
+    position: center;
+}

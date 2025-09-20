@@ -1,5 +1,4 @@
 import { pool } from './index.js'
-
 import { Router } from 'express'
 import { hash } from 'bcrypt'
 import jwt from 'jsonwebtoken'

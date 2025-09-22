@@ -1,6 +1,6 @@
 import { useEffect, useMemo, useState } from 'react';
 
-import { fetchLatestReviews } from './reviews.mock'; //testi api, joka korvataan
+import { fetchLatestReviews } from './reviews.mock'; //testi api, joka 
 import ReviewCard from './ReviewCard';
 
 const SORTS = [

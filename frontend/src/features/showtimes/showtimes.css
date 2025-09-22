@@ -1,0 +1,12 @@
+.showtimes li {
+  display: flex;
+  align-items:normal;
+  gap: 10px;
+  margin-bottom: 20px;
+
+  color: #0BA6DF; 
+  font-size: 20px;
+  font-family:'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif
+     
+}
+

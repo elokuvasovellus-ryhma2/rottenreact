@@ -1,7 +1,8 @@
-// features/auth/SignIn.jsx
+
 import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { useUser } from "../../shared/contexts/useUser";
+import "./auth.css";
 
 export default function SignIn() {
   const { signIn } = useUser();
@@ -23,8 +24,8 @@ export default function SignIn() {
   };
 
   return (
-    <div className="signin-page">
-      <h2>Sign In</h2>
+    <div className="auth-page">
+      <h2>Login</h2>
       <form onSubmit={handleSubmit}>
         <label>Email</label>
         <input

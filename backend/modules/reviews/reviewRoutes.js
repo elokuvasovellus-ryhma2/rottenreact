@@ -1,5 +1,7 @@
-const express = require('express');
-const ReviewController = require('./reviewController');
+import express from 'express';
+import ReviewController from './reviewController.js';
+
+const router = express.Router();
 
 // review routes
 
@@ -9,3 +11,5 @@ const ReviewController = require('./reviewController');
 // - Määrittelee URL-polut ja kytkee middlewaret sekä controllerin. Tarviiko olla kirjautunut?
 // - Ei sisällä logiikkaa eikä SQL:ää.
 // - Rekisteröidään serverissä: app.use("/api/reviews", reviewRoutes)
+
+export default router;

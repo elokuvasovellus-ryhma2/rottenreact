@@ -1,3 +1,3 @@
-const UserModel = require('./userModel');
+import UserModel from './userModel.js';
 
 //class UserController 

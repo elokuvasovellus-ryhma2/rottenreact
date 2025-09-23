@@ -1,4 +1,4 @@
-const ReviewModel = require('./reviewModel');
+import ReviewModel from './reviewModel.js';
 
 //class ReviewController {
 

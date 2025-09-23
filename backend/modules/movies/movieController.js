@@ -1,3 +1,3 @@
-const MovieModel = require('./movieModel');
+import MovieModel from './movieModel.js';
 
 //class MovieController 

@@ -35,12 +35,15 @@ export function Navbar() {
           ))}
         </ul>
         <div className="navbar-auth">
-          <button 
-            onClick={toggleAuth}
-            className="auth-toggle-btn"
-          >
-            {isLoggedIn ? 'LOGOUT' : 'LOGIN'}
-          </button>
+             {isLoggedIn ? (
+             <button onClick={toggleAuth} className="auth-toggle-btn">
+             LOGOUT
+             </button>
+             ) : (
+            <Link to="/signin" className="auth-toggle-btn">
+            LOGIN
+         </Link>
+           )}
         </div>
       </div>
     </nav>

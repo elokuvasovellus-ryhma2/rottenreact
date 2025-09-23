@@ -1,17 +1,60 @@
 import { createContext, useContext, useState } from 'react';
+import axios from 'axios';
 
 const AuthContext = createContext();
 
 export function AuthProvider({ children }) {
-  const [isLoggedIn, setIsLoggedIn] = useState(false);
+  // Get user from session storage on initialization
+  const userFromStorage = sessionStorage.getItem('user');
+  const [user, setUser] = useState(
+    userFromStorage ? JSON.parse(userFromStorage) : null
+  );
 
-  const toggleAuth = () => {
-    setIsLoggedIn(prev => !prev);
+  // Derived state: user exists = logged in
+  const isLoggedIn = !!user;
+
+  const signUp = async (email, password) => {
+    try {
+      const headers = { headers: { 'Content-Type': 'application/json' } };
+      await axios.post(
+        `${import.meta.env.VITE_API_URL}/users/signup`,
+        JSON.stringify({ user: { email, password } }),
+        headers
+      );
+      // Don't set user on signup, user needs to sign in
+      setUser(null);
+    } catch (error) {
+      throw error; // Re-throw so SignUp component can handle it
+    }
+  };
+
+  const signIn = async (email, password) => {
+    try {
+      const headers = { headers: { 'Content-Type': 'application/json' } };
+      const response = await axios.post(
+        `${import.meta.env.VITE_API_URL}/users/signin`,
+        JSON.stringify({ user: { email, password } }),
+        headers
+      );
+
+      setUser(response.data);
+      sessionStorage.setItem('user', JSON.stringify(response.data));
+    } catch (error) {
+      throw error; // Re-throw so SignIn component can handle it
+    }
+  };
+
+  const signOut = () => {
+    sessionStorage.removeItem('user');
+    setUser(null);
   };
 
   const value = {
+    user,
     isLoggedIn,
-    toggleAuth
+    signUp,
+    signIn,
+    signOut
   };
 
   return (

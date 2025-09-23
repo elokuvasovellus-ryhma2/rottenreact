@@ -1,10 +1,10 @@
 import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import PasswordChecklist from "react-password-checklist";
-import { useUser } from "../../shared/contexts/useUser";
+import { useAuth } from "../../shared/contexts/AuthContext";
 
 export default function SignUp() {
-  const { signUp } = useUser();
+  const { signUp } = useAuth();
   const navigate = useNavigate();
 
   const [email, setEmail] = useState("");

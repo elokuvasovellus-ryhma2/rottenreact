@@ -1,23 +1,12 @@
-const jwt = require('jsonwebtoken');
+import jwt from 'jsonwebtoken';
 
-const generateToken = (userId) => {
-  return jwt.sign({ userId }, process.env.JWT_SECRET, { expiresIn: '7d' });
-};
+const JWT_SECRET = process.env.JWT_SECRET || 'dev-secret'
+const DEFAULT_EXPIRES_IN = '7d'
 
-const generateRefreshToken = (userId) => {
-  return jwt.sign({ userId }, process.env.JWT_SECRET, { expiresIn: '30d' });
-};
+export function signToken(payload, options = {}) {
+  return jwt.sign(payload, JWT_SECRET, { expiresIn: DEFAULT_EXPIRES_IN, ...options })
+}
 
-const verifyToken = (token) => {
-  try {
-    return jwt.verify(token, process.env.JWT_SECRET);
-  } catch (error) {
-    throw error;
-  }
-};
-
-module.exports = {
-  generateToken,
-  generateRefreshToken,
-  verifyToken,
-};
+export function verifyToken(token) {
+  return jwt.verify(token, JWT_SECRET)
+}

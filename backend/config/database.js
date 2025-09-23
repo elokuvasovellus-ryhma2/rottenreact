@@ -1,26 +1,14 @@
-const { Pool } = require('pg');
+import dotenv from 'dotenv';
+import pkg from 'pg';
 
-const pool = new Pool({
-  connectionString: process.env.DB_URL,
-  ssl: process.env.NODE_ENV === 'production' ? { rejectUnauthorized: false } : false
-});
+dotenv.config()
 
-const connectDB = async () => {
-  try {
-    await pool.query('SELECT NOW()');
-    console.log('Database connected successfully');
-    
-    // Count and log the number of users only for testing purposes
-    // const userCountResult = await pool.query('SELECT COUNT(*) FROM users');
-    // const userCount = userCountResult.rows[0].count;
-    // console.log(`Total number of users: ${userCount}`);
-    
-  } catch (error) {
-    console.error('Database connection failed:', error.message);
-    throw error;
-  }
-};
+const { Pool } = pkg
 
-
-
-module.exports = { pool, connectDB};
+export const pool = new Pool({
+  user: process.env.DB_USER,
+  host: process.env.DB_HOST,
+  database: process.env.DB_NAME,
+  password: process.env.DB_PASSWORD,
+  port: Number(process.env.DB_PORT),
+})

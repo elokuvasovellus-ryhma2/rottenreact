@@ -1,4 +1,5 @@
 import { useEffect, useState } from 'react'
+import"./showtimes.css";
 
 
 export function Showtimes() {
@@ -59,7 +60,8 @@ export function Showtimes() {
         title: get('Title'),
         start: get('dttmShowStart'),
         theatre: get('Theatre'),
-        auditorium: get('TheatreAuditorium')
+        auditorium: get('TheatreAuditorium'),
+        images: get('EventSmallImagePortrait'),
       })
     }
     setShows(tempShows)
@@ -123,7 +125,7 @@ export function Showtimes() {
   }
 
   return (
-    <div>
+    <div className="showtimes">
       <select onChange={handleAreaChange} defaultValue="">
         <option value="" disabled>Valitse paikkakunta…</option>
         {
@@ -158,6 +160,10 @@ export function Showtimes() {
                 .map(show => {
                 return (
                   <li key={show.id}>
+                    <img
+                    classname="images"
+                    src={show.images}
+                    />
                     {fmtTime(show.start)} — {show.title} ({show.theatre}{show.auditorium ? `, ${show.auditorium}` : ''})
                   </li>
                 )
@@ -167,4 +173,3 @@ export function Showtimes() {
     </div>
   )
 }
-

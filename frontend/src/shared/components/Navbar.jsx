@@ -4,7 +4,7 @@ import './Navbar.css';
 
 export function Navbar() {
   const location = useLocation();
-  const { isLoggedIn, toggleAuth } = useAuth();
+  const { isLoggedIn, signOut } = useAuth();
 
   const navItems = [
     { path: '/', label: 'HOME' },
@@ -35,12 +35,15 @@ export function Navbar() {
           ))}
         </ul>
         <div className="navbar-auth">
-          <button 
-            onClick={toggleAuth}
-            className="auth-toggle-btn"
-          >
-            {isLoggedIn ? 'LOGOUT' : 'LOGIN'}
-          </button>
+             {isLoggedIn ? (
+             <button onClick={signOut} className="auth-toggle-btn">
+             LOGOUT
+             </button>
+             ) : (
+            <Link to="/signin" className="auth-toggle-btn">
+            LOGIN
+         </Link>
+           )}
         </div>
       </div>
     </nav>

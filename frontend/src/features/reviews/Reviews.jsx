@@ -1,6 +1,6 @@
 import { useEffect, useMemo, useState } from 'react';
 
-import { fetchLatestReviews } from './reviews.mock'; //testi api, joka 
+import { fetchLatestReviews } from '../../shared/api/reviews'; 
 import ReviewCard from './ReviewCard';
 
 const SORTS = [
@@ -48,7 +48,7 @@ export function Reviews() {
       {!loading && !sorted.length && <p>No reviews yet.</p>}
 
       <section className="grid">
-        {sorted.map(r => <ReviewCard key={r._id} review={r} />)}
+        {sorted.map(r => <ReviewCard key={r.id} review={r} />)}
       </section>
 
       <style>{`

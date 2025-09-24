@@ -3,6 +3,8 @@ import cors from 'cors';
 import dotenv from 'dotenv';
 import authRoutes from './modules/auth/authRoutes.js';
 import { pool } from './config/database.js';
+import reviewRoutes from './modules/reviews/reviewRoutes.js';
+
 
 dotenv.config();
 
@@ -14,6 +16,7 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 
 app.use('/users', authRoutes);
+app.use('/api/reviews', reviewRoutes);
 
 app.use((err, req, res, next) => {
   console.error(err);

@@ -6,6 +6,7 @@ import { Reviews } from './features/reviews/Reviews';
 import { Favorites } from './features/favorites/Favorites';
 import { Groups } from './features/groups/Groups';
 import { Showtimes } from './features/showtimes/Showtimes';
+import { Profile } from './features/profile/Profile';
 import  MovieDetail  from './features/movie_search_results/components/MovieDetail';
 import  MovieSearchPage from './features/movie_search_results/components/MovieSearchPage.jsx';
 import SignIn from "./features/Auth/SignIn";
@@ -26,6 +27,7 @@ function App() {
             <Route path="/movies/:id" element={<MovieDetail />} />
             <Route path="/signin" element={<SignIn />} />
             <Route path="/signup" element={<SignUp />} />
+            <Route path="/profile" element={<Profile />} />
           </Routes>
         </Layout>
       </BrowserRouter>

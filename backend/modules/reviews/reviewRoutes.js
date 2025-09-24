@@ -3,7 +3,7 @@ import { getReviews, postReview } from './reviewController.js';
 
 const router = Router();
 
-router.get('/', getReviews);   // GET /api/reviews
-router.post('/', postReview);  // POST /api/reviews
+router.get('/', getReviews);   
+router.post('/', postReview);  
 
 export default router;

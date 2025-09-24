@@ -5,26 +5,25 @@ const api = axios.create({
   headers: { "Content-Type": "application/json" }
 });
 
-// Muunna snake_case -> camelCase, ja anna samat kentät kuin mockissa
+
 const normalize = (r) => ({
-  id: r.id,                           // käytetään kortin key:ssä
+  id: r.id,                          
   movieId: r.movie_id,
   rating: r.rating,
   title: r.title ?? null,
   body: r.body ?? "",
-  createdAt: r.created_at,            // mock käytti createdAt
-  user: r.user || null,               // jos backendi palauttaa user-objektin myöhemmin
+  createdAt: r.created_at,            
+  user: r.user || null,               
 });
 
-export async function fetchLatestReviews({ limit = 24, sort = "new" } = {}) {
-  // sovita sort backendin odottamaan muotoon
+export async function fetchLatestReviews({ limit = 24, sort = "new", movieId } = {}) {
   const sortMap = {
     new: "created_at.desc",
     rating: "rating.desc",
     title: "title.asc",
   };
   const res = await api.get(`/api/reviews`, {
-    params: { limit, sort: sortMap[sort] ?? sortMap.new },
+     params: { limit, sort: sortMap[sort] ?? sortMap.new, movieId },
   });
   return Array.isArray(res.data) ? res.data.map(normalize) : [];
 }

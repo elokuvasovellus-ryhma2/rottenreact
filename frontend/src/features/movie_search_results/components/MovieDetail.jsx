@@ -1,7 +1,8 @@
-
 import React, { useState, useEffect } from 'react';
 import { useParams } from 'react-router-dom';
 import './MovieDetail.css';
+import ReviewForm from '../../reviews/ReviewForm';
+import { Reviews } from '../../reviews/Reviews';
 
 export default function MovieDetail() {
   const { id } = useParams();
@@ -10,25 +11,14 @@ export default function MovieDetail() {
   const token                  = import.meta.env.VITE_TMDB_TOKEN;
 
   useEffect(() => {
-    if (!id) {
-      setLoading(false);
-      return;
-    }
-
-    async function fetchMovie() {
+    if (!id) { setLoading(false); return; }
+    (async () => {
       try {
         const res = await fetch(
           `https://api.themoviedb.org/3/movie/${id}?language=en-US`,
-          {
-            headers: {
-              Authorization: `Bearer ${token}`,
-              accept: 'application/json',
-            },
-          }
+          { headers: { Authorization: `Bearer ${token}`, accept: 'application/json' } }
         );
-        if (!res.ok) {
-          throw new Error(`Virhe haussa: ${res.status}`);
-        }
+        if (!res.ok) throw new Error(`Virhe haussa: ${res.status}`);
         const data = await res.json();
         setMovie(data);
       } catch (err) {
@@ -36,53 +26,33 @@ export default function MovieDetail() {
       } finally {
         setLoading(false);
       }
-    }
-
-    fetchMovie();
+    })();
   }, [id, token]);
 
-  if (loading) {
-    return <p>Loading...</p>;
-  }
+  if (loading) return <p>Loading...</p>;
+  if (!movie)   return <p>Movie not found</p>;
 
-  if (!movie) {
-    return <p>Movie not found</p>;
-  }
-
-  const {
-    title,
-    poster_path,
-    release_date,
-    overview,
-    vote_average,
-  } = movie;
+  const { title, poster_path, release_date, overview, vote_average } = movie;
 
   return (
     <div className="movie-detail">
       <h1>{title}</h1>
 
       {poster_path && (
-        <img
-          src={`https://image.tmdb.org/t/p/w500${poster_path}`}
-          alt={title}
-        />
+        <img src={`https://image.tmdb.org/t/p/w500${poster_path}`} alt={title} />
       )}
 
-      <p>
-        <strong>Release Date:</strong> {release_date}
-      </p>
-
-      <p>
-        <strong>Description:</strong> {overview}
-      </p>
-
+      <p><strong>Release Date:</strong> {release_date}</p>
+      <p><strong>Description:</strong> {overview}</p>
       <p>
         <strong>Rating:</strong>{' '}
-        {typeof vote_average === 'number'
-          ? vote_average.toFixed(1)
-          : '–'}{' '}
-        / 10
+        {typeof vote_average === 'number' ? vote_average.toFixed(1) : '–'} / 10
       </p>
+
+      <h2 style={{ marginTop: 24 }}>Review this movie</h2>
+      <ReviewForm movieId={id} />
+      {}
+      <Reviews movieId={id} heading="" showPosters={false} />
     </div>
   );
 }

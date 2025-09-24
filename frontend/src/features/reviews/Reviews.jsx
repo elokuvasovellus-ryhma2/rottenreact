@@ -1,15 +1,14 @@
 import { useEffect, useMemo, useState } from 'react';
-
-import { fetchLatestReviews } from '../../shared/api/reviews'; 
+import { fetchLatestReviews } from '../../shared/api/reviews';
 import ReviewCard from './ReviewCard';
 
 const SORTS = [
-  { id: 'new', label: 'Newest' },
+  { id: 'new',    label: 'Newest' },
   { id: 'rating', label: 'Rating' },
-  { id: 'title', label: 'Title' },
+  { id: 'title',  label: 'Title'  },
 ];
 
-export function Reviews() {
+export function Reviews({ movieId, heading = 'Reviews', showPosters = true }) {
   const [sort, setSort] = useState('new');
   const [items, setItems] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -18,12 +17,12 @@ export function Reviews() {
   useEffect(() => {
     let ignore = false;
     setLoading(true); setErr('');
-    fetchLatestReviews({ limit: 24, sort })
-      .then((rows) => { if (!ignore) setItems(rows); })
+    fetchLatestReviews({ limit: 24, sort, movieId })
+      .then(rows => { if (!ignore) setItems(rows); })
       .catch(() => setErr('Failed to load reviews'))
       .finally(() => setLoading(false));
     return () => { ignore = true; };
-  }, [sort]);
+  }, [sort, movieId]);
 
   const sorted = useMemo(() => {
     if (sort === 'rating') return [...items].sort((a,b)=>b.rating-a.rating);
@@ -34,7 +33,7 @@ export function Reviews() {
   return (
     <div className="reviews-page">
       <header className="header">
-        <h1>Reviewed movies</h1>
+        {heading ? <h1>{heading}</h1> : <span />}
         <label className="sort">
           Sort by{' '}
           <select value={sort} onChange={e => setSort(e.target.value)}>
@@ -48,16 +47,18 @@ export function Reviews() {
       {!loading && !sorted.length && <p>No reviews yet.</p>}
 
       <section className="grid">
-        {sorted.map(r => <ReviewCard key={r.id} review={r} />)}
+        {sorted.map(r => (
+          <ReviewCard key={r.id} review={r} showPoster={showPosters} />
+        ))}
       </section>
 
       <style>{`
         .reviews-page { max-width:1100px; margin:0 auto; padding:1rem; }
         .header { display:flex; align-items:center; justify-content:space-between;
-                  border-bottom:1px solid #e5e7eb; padding:.75rem 0; margin-bottom:1rem; }
+                  border-bottom:1px solid #2b2b2b; padding:.75rem 0; margin-bottom:1rem; }
         h1 { font-size:2rem; font-weight:700; margin:0; }
         .sort select { margin-left:.5rem; }
-        .grid { display:grid; grid-template-columns: repeat(auto-fill, minmax(200px,1fr)); gap:1rem; }
+        .grid { display:grid; grid-template-columns: repeat(auto-fill, minmax(220px,1fr)); gap:1rem; }
         .error { color:#b91c1c; }
       `}</style>
     </div>

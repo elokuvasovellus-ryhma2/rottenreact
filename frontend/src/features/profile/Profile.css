@@ -50,3 +50,24 @@
 .info-card strong {
   color: #333;
 }
+
+.group-upper {
+  display: flex;
+  gap: 1rem;
+  margin-bottom: 1rem;
+}
+
+.group-lower {
+  display: flex;
+  gap: 1rem;
+  margin-bottom: 1rem;
+}
+
+.group-upper > *,
+.group-lower > * {
+  flex: 1;
+  border-radius: 8px;
+  border: 1px solid #e0e0e0;
+  padding: 1rem;
+  background: #f8f9fa;
+}

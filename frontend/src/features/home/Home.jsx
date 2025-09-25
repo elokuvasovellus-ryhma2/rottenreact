@@ -1,6 +1,6 @@
-import { ExampleComponent } from '../../shared/components/ExampleComponent.jsx';
 import { HomeExampleComponent } from './components/HomeExampleComponent';
 import MovieSearch from './components/MoviesSearch';
+import LatestReviewsRow from './components/LatestReviewsRow';
 
 export function Home() {
   return (
@@ -9,7 +9,7 @@ export function Home() {
       <div className="featured-content">
         <MovieSearch />
         <HomeExampleComponent />
-        <ExampleComponent />
+        <LatestReviewsRow />
       </div>
     </div>
   );

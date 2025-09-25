@@ -1,0 +1,31 @@
+
+.stars-input { color: inherit; }
+
+
+.stars-input .star {
+  cursor: pointer;
+  font-size: 24px;
+  line-height: 1;
+  background: transparent;
+  border: none;
+  padding: 0;
+  color: #6b7280;              
+  transition: transform .08s ease, color .2s ease;
+}
+
+
+.stars-input .star.on {
+  color: #fbbf24;              
+}
+
+
+.stars-input .star:hover,
+.stars-input .star.hover {
+  transform: scale(1.08);
+}
+
+
+.stars-input .star:focus-visible {
+  outline: 2px solid #3b82f6;
+  outline-offset: 2px;
+}

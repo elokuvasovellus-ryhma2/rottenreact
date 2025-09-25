@@ -22,7 +22,7 @@ export default function LatestReviewsRow() {
   return (
     <section className="lrw">
       <div className="lrw__header">
-        <h2>Your latest reviews</h2>
+        <h2>Latest reviews</h2>
         <div className="lrw__nav">
           <button className="lrw__btn" onClick={() => scrollBy(-400)} aria-label="Scroll left">‹</button>
           <button className="lrw__btn" onClick={() => scrollBy(400)} aria-label="Scroll right">›</button>

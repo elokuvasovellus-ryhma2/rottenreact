@@ -1,14 +1,17 @@
+
 import React, { useState, useEffect } from 'react';
 import { useParams } from 'react-router-dom';
 import './MovieDetail.css';
 import ReviewForm from '../../reviews/ReviewForm';
 import { Reviews } from '../../reviews/Reviews';
+import { AddToFavoritesButton } from "./AddToFavoritesButton";
 
 export default function MovieDetail() {
   const { id } = useParams();
   const [movie, setMovie]     = useState(null);
   const [loading, setLoading] = useState(true);
   const token                  = import.meta.env.VITE_TMDB_TOKEN;
+  const userId = localStorage.getItem('userId');
 
   useEffect(() => {
     if (!id) { setLoading(false); return; }
@@ -48,6 +51,9 @@ export default function MovieDetail() {
         <strong>Rating:</strong>{' '}
         {typeof vote_average === 'number' ? vote_average.toFixed(1) : '–'} / 10
       </p>
+
+      <AddToFavoritesButton userId={userId} movieId={id} />
+       
 
       <h2 style={{ marginTop: 24 }}>Review this movie</h2>
       <ReviewForm movieId={id} />

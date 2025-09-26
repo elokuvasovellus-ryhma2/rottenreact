@@ -1,41 +1,43 @@
-import { useEffect, useMemo, useState } from 'react';
-import { fetchLatestReviews } from '../../shared/api/reviews';
-import ReviewCard from './ReviewCard';
+import { useEffect, useMemo, useState } from "react";
+import { fetchLatestReviews } from "../../shared/api/reviews";
+import ReviewCard from "./ReviewCard";
+import "./Reviews.css";
 
 const SORTS = [
-  { id: 'new',    label: 'Newest' },
-  { id: 'rating', label: 'Rating' },
-  { id: 'title',  label: 'Title'  },
+  { id: "new",    label: "Newest" },
+  { id: "rating", label: "Rating" },
+  { id: "title",  label: "Title"  },
 ];
 
-export function Reviews({ movieId, heading = 'Reviews', showPosters = true }) {
-  const [sort, setSort] = useState('new');
+export function Reviews({ movieId, heading = "Reviews", showPosters = true }) {
+  const [sort, setSort] = useState("new");
   const [items, setItems] = useState([]);
   const [loading, setLoading] = useState(true);
-  const [err, setErr] = useState('');
+  const [err, setErr] = useState("");
 
   useEffect(() => {
     let ignore = false;
-    setLoading(true); setErr('');
+    setLoading(true); setErr("");
     fetchLatestReviews({ limit: 24, sort, movieId })
       .then(rows => { if (!ignore) setItems(rows); })
-      .catch(() => setErr('Failed to load reviews'))
+      .catch(() => setErr("Failed to load reviews"))
       .finally(() => setLoading(false));
     return () => { ignore = true; };
   }, [sort, movieId]);
 
   const sorted = useMemo(() => {
-    if (sort === 'rating') return [...items].sort((a,b)=>b.rating-a.rating);
-    if (sort === 'title')  return [...items].sort((a,b)=>(a.title||'').localeCompare(b.title||''));
+    if (sort === "rating") return [...items].sort((a,b)=>b.rating-a.rating);
+    if (sort === "title")  return [...items].sort((a,b)=>(a.title||"").localeCompare(b.title||""));
     return [...items].sort((a,b)=> new Date(b.createdAt) - new Date(a.createdAt));
   }, [items, sort]);
 
+ 
   return (
     <div className="reviews-page">
       <header className="header">
         {heading ? <h1>{heading}</h1> : <span />}
         <label className="sort">
-          Sort by{' '}
+          Sort by{" "}
           <select value={sort} onChange={e => setSort(e.target.value)}>
             {SORTS.map(s => <option key={s.id} value={s.id}>{s.label}</option>)}
           </select>
@@ -51,16 +53,6 @@ export function Reviews({ movieId, heading = 'Reviews', showPosters = true }) {
           <ReviewCard key={r.id} review={r} showPoster={showPosters} />
         ))}
       </section>
-
-      <style>{`
-        .reviews-page { max-width:1100px; margin:0 auto; padding:1rem; }
-        .header { display:flex; align-items:center; justify-content:space-between;
-                  border-bottom:1px solid #2b2b2b; padding:.75rem 0; margin-bottom:1rem; }
-        h1 { font-size:2rem; font-weight:700; margin:0; }
-        .sort select { margin-left:.5rem; }
-        .grid { display:grid; grid-template-columns: repeat(auto-fill, minmax(220px,1fr)); gap:1rem; }
-        .error { color:#b91c1c; }
-      `}</style>
     </div>
   );
 }

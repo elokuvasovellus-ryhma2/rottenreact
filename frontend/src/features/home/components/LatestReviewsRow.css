@@ -1,0 +1,27 @@
+.lrw { margin: 1.5rem 0 2rem; }
+
+.lrw__header {
+  display: flex; align-items: center; justify-content: space-between;
+  margin-bottom: .75rem; border-bottom: 1px solid #2b2b2b; padding-bottom: .5rem;
+}
+.lrw h2 { margin: 0; font-size: 1.25rem; font-weight: 700; }
+
+.lrw__nav { display: flex; gap: .5rem; }
+.lrw__btn {
+  border: 1px solid #2b2b2b; background:#131313; color:#eee;
+  width: 36px; height: 36px; border-radius: 8px; cursor: pointer;
+}
+.lrw__btn:hover { background:#1a1a1a; }
+
+.lrw__status { margin:.5rem 0; color:#bbb; }
+.lrw__status--err { color:#ef4444; }
+.lrw__scroller {
+ display: flex;
+  gap: 12px;                 
+  overflow-x: auto;
+  padding-bottom: .5rem;
+  scroll-snap-type: x mandatory;
+}
+ .lrw__item {
+  flex: 0 0 170px;            
+  scroll-snap-align: start;}

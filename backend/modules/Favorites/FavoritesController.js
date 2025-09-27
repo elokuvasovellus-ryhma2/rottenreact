@@ -75,11 +75,10 @@ export async function getListMovies(req, res) {
 
     const result = await pool.query(
       `
-      SELECT m.*
-      FROM movies m
-      JOIN user_favorite_movies ufm ON m.id = ufm.movie_id
-      WHERE ufm.list_id = $1
-      ORDER BY m.title ASC
+      SELECT movie_id
+      FROM user_favorite_movies
+      WHERE list_id = $1
+      
       `,
       [listId]
     );

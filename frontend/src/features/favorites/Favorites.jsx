@@ -8,7 +8,15 @@ export default function FavoritesPage() {
   const [checkedLists, setCheckedLists] = useState({});
   const [movies, setMovies] = useState([]);
   const [newListName, setNewListName] = useState('');
-  const userId = localStorage.getItem('userId');
+
+  ///////////////////////////////////////////////////////////// Get user ID from sessionStorage user object /////////////////////////////////////////////////////////////
+  const getUser = () => {
+    const userStr = sessionStorage.getItem('user');
+    return userStr ? JSON.parse(userStr) : null;
+  };
+  const user = getUser();
+  const userId = user?.id;
+  ///////////////////////////////////////////////////////////// Get user ID from sessionStorage user object /////////////////////////////////////////////////////////////
 
   // Hae käyttäjän listat
   useEffect(() => {
@@ -27,6 +35,9 @@ export default function FavoritesPage() {
   // Hae elokuvat valitusta listasta
   useEffect(() => {
     if (!selectedListId) return;
+    ///////////////////////////////////////////////////////////// Debug log /////////////////////////////////////////////////////////////
+    console.log('Fetching movies for listId:', selectedListId);
+    ///////////////////////////////////////////////////////////// Debug log /////////////////////////////////////////////////////////////
     fetch(`${import.meta.env.VITE_API_URL}/favorites/${selectedListId}`)
       .then(res => res.json())
       .then(data => setMovies(data))
@@ -37,14 +48,29 @@ export default function FavoritesPage() {
   const handleCreateList = async () => {
     if (!newListName.trim()) return;
     try {
+
+      ///////////////////////////////////////////////////////////// Debug log /////////////////////////////////////////////////////////////
+      console.log('Creating list with name:', newListName);
+      console.log('User ID:', userId);
+      ///////////////////////////////////////////////////////////// Debug log /////////////////////////////////////////////////////////////
+
       const res = await fetch(`${import.meta.env.VITE_API_URL}/favorites/create`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ userId, name: newListName })
       });
       const data = await res.json();
-      setLists(prev => [...prev, { id: data.listId, name: newListName }]);
-      setCheckedLists(prev => ({ ...prev, [data.listId]: false }));
+
+      ///////////////////////////////////////////////////////////// Debug log /////////////////////////////////////////////////////////////
+      console.log('API Response:', data); // Debug log
+      ///////////////////////////////////////////////////////////// Debug log /////////////////////////////////////////////////////////////
+      
+      if (!data.list || !data.list.id) {
+        throw new Error('Invalid response from server');
+      }
+      
+      setLists(prev => [...prev, { id: data.list.id, name: newListName }]);
+      setCheckedLists(prev => ({ ...prev, [data.list.id]: false }));
       setNewListName('');
     } catch (err) {
       console.error('Virhe listan luonnissa:', err);
@@ -55,6 +81,9 @@ export default function FavoritesPage() {
   const handleShowCheckedList = () => {
     const selected = Object.entries(checkedLists).find(([id, checked]) => checked);
     if (selected) {
+      ///////////////////////////////////////////////////////////// Debug log /////////////////////////////////////////////////////////////
+      console.log('Selected list ID:', selected[0]);
+      ///////////////////////////////////////////////////////////// Debug log /////////////////////////////////////////////////////////////
       setSelectedListId(selected[0]);
     }
   };
@@ -110,9 +139,11 @@ export default function FavoritesPage() {
           <p>No movies in this list.</p>
         ) : (
           movies.map(movie => (
-            <div key={movie.id} className="movie-card">
-              <h3>{movie.title}</h3>
-              <p>{movie.release_year}</p>
+            <div key={movie.movie_id} className="movie-card">
+              <h3>Movie ID: {movie.movie_id}</h3>
+              <p>Tähän voisi tulla elokuvan tiedot</p>
+              <p>Tähän voisi tulla elokuvan kuva</p>
+              <p></p>
             </div>
           ))
         )}

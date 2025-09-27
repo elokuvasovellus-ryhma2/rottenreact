@@ -51,6 +51,9 @@
 
 .navbar-auth {
   margin-left: 2rem;
+  display: flex;
+  align-items: center;
+  gap: 1rem;
 }
 
 .auth-toggle-btn {
@@ -67,6 +70,26 @@
 .auth-toggle-btn:hover {
   background-color: #FAA533;
 }
+
+.profile-btn {
+  background-color: #4122ef;
+  color: white;
+  text-decoration: none;
+  padding: 0.5rem;
+  border-radius: 50px;
+  font-weight: bold;
+  transition: background-color 0.3s ease;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 40px;
+  height: 40px;
+}
+
+.profile-btn:hover {
+  background-color: #FAA533;
+}
+
 
 .main-content {
   min-height: calc(100vh - 120px);

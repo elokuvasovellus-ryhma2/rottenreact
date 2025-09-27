@@ -36,9 +36,14 @@ export function Navbar() {
         </ul>
         <div className="navbar-auth">
              {isLoggedIn ? (
-             <button onClick={signOut} className="auth-toggle-btn">
-             LOGOUT
-             </button>
+               <>
+                 <Link to="/profile" className="profile-btn">
+                   <span>⚙</span>
+                 </Link>
+                 <button onClick={signOut} className="auth-toggle-btn">
+                   LOGOUT
+                 </button>
+               </>
              ) : (
             <Link to="/signin" className="auth-toggle-btn">
             LOGIN

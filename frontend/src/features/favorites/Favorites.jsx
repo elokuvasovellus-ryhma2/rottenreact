@@ -1,12 +1,123 @@
-export function Favorites() {
+
+import { useState, useEffect } from 'react';
+import './FavoritesPage.css';
+
+export default function FavoritesPage() {
+  const [lists, setLists] = useState([]);
+  const [selectedListId, setSelectedListId] = useState(null);
+  const [checkedLists, setCheckedLists] = useState({});
+  const [movies, setMovies] = useState([]);
+  const [newListName, setNewListName] = useState('');
+  const userId = localStorage.getItem('userId');
+
+  // Hae käyttäjän listat
+  useEffect(() => {
+    if (!userId) return;
+    fetch(`${import.meta.env.VITE_API_URL}/favorites/user-lists/${userId}`)
+      .then(res => res.json())
+      .then(data => {
+        setLists(data);
+        setCheckedLists(
+          Object.fromEntries(data.map(list => [list.id, false]))
+        );
+      })
+      .catch(err => console.error('Virhe listojen haussa:', err));
+  }, [userId]);
+
+  // Hae elokuvat valitusta listasta
+  useEffect(() => {
+    if (!selectedListId) return;
+    fetch(`${import.meta.env.VITE_API_URL}/favorites/${selectedListId}`)
+      .then(res => res.json())
+      .then(data => setMovies(data))
+      .catch(err => console.error('Virhe elokuvien haussa:', err));
+  }, [selectedListId]);
+
+  // Luo uusi lista
+  const handleCreateList = async () => {
+    if (!newListName.trim()) return;
+    try {
+      const res = await fetch(`${import.meta.env.VITE_API_URL}/favorites/create`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ userId, name: newListName })
+      });
+      const data = await res.json();
+      setLists(prev => [...prev, { id: data.listId, name: newListName }]);
+      setCheckedLists(prev => ({ ...prev, [data.listId]: false }));
+      setNewListName('');
+    } catch (err) {
+      console.error('Virhe listan luonnissa:', err);
+    }
+  };
+
+  // Näytä elokuvat valitusta checkbox-listasta
+  const handleShowCheckedList = () => {
+    const selected = Object.entries(checkedLists).find(([id, checked]) => checked);
+    if (selected) {
+      setSelectedListId(selected[0]);
+    }
+  };
+
+  // Simuloi listan jakamista
+  const handleShareList = () => {
+    const shared = Object.entries(checkedLists)
+      .filter(([_, checked]) => checked)
+      .map(([id]) => id);
+    alert(`Jaetaan listat: ${shared.join(', ')}`);
+  };
+
   return (
     <div className="favorites-page">
-      <h1>My Favorites</h1>
-      <p>Your personal collection of favorite movies</p>
-      <div className="favorites-content">
-        <h2>Saved Movies</h2>
-        <p>Movies you've marked as favorites</p>
+      <div className="left-panel">
+        <h2>Make a new list</h2>
+        <input
+          type="text"
+          placeholder="Movie list name"
+          value={newListName}
+          onChange={e => setNewListName(e.target.value)}
+        />
+        <button onClick={handleCreateList}>Ok</button>
+
+        <h3>Your lists</h3>
+        <ul>
+          {lists.map(list => (
+            <li key={list.id}>
+              <label>
+                <input
+                  type="checkbox"
+                  checked={checkedLists[list.id] || false}
+                  onChange={e =>
+                    setCheckedLists(prev => ({
+                      ...prev,
+                      [list.id]: e.target.checked
+                    }))
+                  }
+                />
+                {list.name}
+              </label>
+            </li>
+          ))}
+        </ul>
+
+        <button onClick={handleShowCheckedList}>Show movies in favorite list</button>
+        <button onClick={handleShareList}>Share a checked list</button>
+      </div>
+
+      <div className="right-panel">
+        <h2>Show movies in a list</h2>
+        {movies.length === 0 ? (
+          <p>No movies in this list.</p>
+        ) : (
+          movies.map(movie => (
+            <div key={movie.id} className="movie-card">
+              <h3>{movie.title}</h3>
+              <p>{movie.release_year}</p>
+            </div>
+          ))
+        )}
       </div>
     </div>
   );
 }
+  

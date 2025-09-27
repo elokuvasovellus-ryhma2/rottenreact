@@ -72,10 +72,10 @@ export default function SignUp() {
             valueAgain={confirmPassword} 
             onChange={(ok) => setIsValidPwd(ok)}
             messages={{
-              minLength: "Vähintään 8 merkkiä",
-              capital: "Vähintään yksi iso kirjain (A–Z)",
-              number: "Vähintään yksi numero (0–9)",
-              match: "Salasanat täsmäävät",
+              minLength: "At least 8 characters",
+              capital: "Atleast one uppercase letter",
+              number: "Atleast one number",
+              match: "Passwords match"
             }}
           />
         </div>

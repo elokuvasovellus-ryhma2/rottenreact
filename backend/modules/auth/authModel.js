@@ -20,3 +20,15 @@ export async function getUserByEmail(email) {
   );
   return rows[0];
 }
+
+
+export async function deleteUserById(userId) {
+  const { rows } = await pool.query(
+    `DELETE FROM users
+     WHERE id = $1
+     RETURNING id, email`,
+    [userId]
+  );
+  return rows[0]; 
+}
+

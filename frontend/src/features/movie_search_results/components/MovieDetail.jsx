@@ -11,7 +11,15 @@ export default function MovieDetail() {
   const [movie, setMovie]     = useState(null);
   const [loading, setLoading] = useState(true);
   const token                  = import.meta.env.VITE_TMDB_TOKEN;
-  const userId = localStorage.getItem('userId');
+  
+  ///////////////////////////////////////////////////////////// Get user ID from sessionStorage user object /////////////////////////////////////////////////////////////
+  const getUser = () => {
+    const userStr = sessionStorage.getItem('user');
+    return userStr ? JSON.parse(userStr) : null;
+  };
+  const user = getUser();
+  const userId = user?.id;
+  ///////////////////////////////////////////////////////////// Get user ID from sessionStorage user object /////////////////////////////////////////////////////////////
 
   useEffect(() => {
     if (!id) { setLoading(false); return; }

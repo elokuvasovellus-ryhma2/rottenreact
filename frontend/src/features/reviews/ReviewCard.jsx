@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
 import "./ReviewCard.css";
+import ReviewToGroup from "./ReviewToGroup";
 
 function Stars({ value = 0 }) {
   const full = Math.round(value);
@@ -15,6 +16,7 @@ function Stars({ value = 0 }) {
 
 export default function ReviewCard({ review, showPoster = true, variant = "normal" }) {
   const [movie, setMovie] = useState(null);
+  const [isModalOpen, setIsModalOpen] = useState(false);
   const token = import.meta.env.VITE_TMDB_TOKEN;
 
   useEffect(() => {
@@ -38,8 +40,29 @@ export default function ReviewCard({ review, showPoster = true, variant = "norma
   
   const posterSize = variant === "compact" ? "w185" : "w342";
 
+  const handleCardClick = () => {
+    setIsModalOpen(true);
+  };
+
+  const handleCloseModal = () => {
+    setIsModalOpen(false);
+  };
+
   return (
-    <article className={`review-card ${variant}`}>
+    <>
+      <article 
+        className={`review-card ${variant} clickable`} 
+        onClick={handleCardClick}
+        role="button"
+        tabIndex={0}
+        onKeyDown={(e) => {
+          if (e.key === 'Enter' || e.key === ' ') {
+            e.preventDefault();
+            handleCardClick();
+          }
+        }}
+        aria-label={`View review for ${movie?.title || `Movie #${review.movieId}`}`}
+      >
       {showPoster && (
         <div className="poster" aria-hidden>
           {movie?.poster_path ? (
@@ -71,6 +94,14 @@ export default function ReviewCard({ review, showPoster = true, variant = "norma
           {new Date(review.createdAt).toLocaleDateString()}
         </div>
       </div>
-    </article>
+      </article>
+      
+      <ReviewToGroup 
+        review={review} 
+        movie={movie} 
+        isOpen={isModalOpen} 
+        onClose={handleCloseModal} 
+      />
+    </>
   );
 }

@@ -44,3 +44,20 @@
   overflow: hidden;
 }
 .review-card.compact .stars .star { font-size: 12px; }
+
+/* Clickable card styles */
+.review-card.clickable {
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.review-card.clickable:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+  border-color: #444;
+}
+
+.review-card.clickable:focus {
+  outline: 2px solid #ffd04d;
+  outline-offset: 2px;
+}

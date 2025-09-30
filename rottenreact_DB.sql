@@ -139,8 +139,10 @@ CREATE TABLE public.user_favorite_list (
 --
 
 CREATE TABLE public.user_favorite_movies (
+     list_id uuid NOT NULL,
     movie_id text NOT NULL,
-    list_id uuid NOT NULL
+    PRIMARY KEY (list_id, movie_id),
+    FOREIGN KEY (list_id) REFERENCES user_favorite_list(id) ON DELETE CASCADE
 );
 
 

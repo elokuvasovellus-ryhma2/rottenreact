@@ -96,7 +96,23 @@ export default function FavoritesPage() {
     alert(`Jaetaan listat: ${shared.join(', ')}`);
   };
 
-  return (
+  // Poista elokuva listalta
+  const handleRemoveMovie = async (movieId) => {
+    try {
+      const res = await fetch(`${import.meta.env.VITE_API_URL}/favorites/remove`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ listId: selectedListId, movieId })
+      });
+      const data = await res.json();
+      console.log('Poisto:', data);
+      setMovies(prev => prev.filter(movie => movie.movie_id !== movieId));
+    } catch (err) {
+      console.error('Virhe elokuvan poistossa:', err);
+    }
+  };
+
+    return (
     <div className="favorites-page">
       <div className="left-panel">
         <h2>Make a new list</h2>
@@ -135,20 +151,31 @@ export default function FavoritesPage() {
 
       <div className="right-panel">
         <h2>Show movies in a list</h2>
-        {movies.length === 0 ? (
-          <p>No movies in this list.</p>
-        ) : (
-          movies.map(movie => (
-            <div key={movie.movie_id} className="movie-card">
-              <h3>Movie ID: {movie.movie_id}</h3>
-              <p>Tähän voisi tulla elokuvan tiedot</p>
-              <p>Tähän voisi tulla elokuvan kuva</p>
-              <p></p>
-            </div>
-          ))
-        )}
+        <div className="movie-list-scroll">
+          {movies.length === 0 ? (
+            <p>No movies in this list.</p>
+          ) : (
+            movies.map(movie => (
+              <div key={movie.movie_id} className="movie-card">
+                <h3>{movie.title}</h3>
+                <button
+                  onClick={() => handleRemoveMovie(movie.movie_id)}
+                  className="remove-button"
+                >
+                  Delete
+                </button>
+                <p>{movie.description}</p>
+                <img
+                  src={movie.image_url}
+                  alt={movie.title}
+                  className="movie-image"
+                />
+              </div>
+            ))
+          )}
+        </div>
       </div>
     </div>
   );
 }
-  
+

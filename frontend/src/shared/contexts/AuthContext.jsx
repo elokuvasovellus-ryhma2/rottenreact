@@ -39,8 +39,9 @@ export function AuthProvider({ children }) {
 
       setUser(response.data);
       sessionStorage.setItem('user', JSON.stringify(response.data));
+      sessionStorage.setItem('token', response.data.token);
     } catch (error) {
-      throw error; // Re-throw so SignIn component can handle it
+      throw error; 
     }
   };
 

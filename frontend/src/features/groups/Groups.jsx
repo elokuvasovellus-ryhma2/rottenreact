@@ -6,11 +6,29 @@ export function Groups() {
   const [searchQuery, setSearchQuery] = useState("");
   const [searchResults, setSearchResults] = useState([]); 
 
-  const handleCreateConfirm = () => {
-    if (!newGroupName.trim()) return;
-    // TODO: myöhemmin tee POST /api/groups/create
-    setNewGroupName("");
-  };
+  const API = import.meta.env.VITE_API_URL;
+  
+const userId = (() => {
+  const s = sessionStorage.getItem("user");
+  try { return s ? JSON.parse(s).id : null; } catch { return null; }
+})();
+
+
+const handleCreateConfirm = async () => {
+  const name = newGroupName.trim();
+  if (!name) return;
+
+  await fetch(`${API}/Group/create`, {              
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({
+      userId: JSON.parse(sessionStorage.getItem("user")).id,
+      name
+    }),
+  });
+
+  setNewGroupName("");
+};
 
   const handleSearchConfirm = () => {
     // TODO: myöhemmin tee GET /api/groups/search?q=searchQuery

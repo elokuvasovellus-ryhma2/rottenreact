@@ -4,6 +4,7 @@ import dotenv from 'dotenv';
 import authRoutes from './modules/auth/authRoutes.js';
 import reviewRoutes from './modules/reviews/reviewRoutes.js';
 import favoritesRoutes from './modules/favorites/favoritesRoutes.js';
+import GroupRoutes from "./modules/Group/GroupRoutes.js";
 import { pool } from './config/database.js';
 
 dotenv.config();
@@ -18,6 +19,7 @@ app.use(express.urlencoded({ extended: false }));
 app.use('/users', authRoutes);
 app.use('/api/reviews', reviewRoutes);
 app.use('/favorites', favoritesRoutes);
+app.use('/Group',GroupRoutes);
 
 app.use((err, req, res, next) => {
   console.error(err);

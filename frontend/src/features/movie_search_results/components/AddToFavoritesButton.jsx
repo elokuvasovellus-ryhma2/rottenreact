@@ -4,8 +4,11 @@ import React, { useState, useEffect } from 'react';
 export function AddToFavoritesButton({ userId, movieId }) {
   const [lists, setLists] = useState([]);
   const [selectedListId, setSelectedListId] = useState('');
-
+  
   useEffect(() => {
+    ///////////////////////////////////////////////////////////// Debug log /////////////////////////////////////////////////////////////
+    console.log('User ID:', userId);
+    ///////////////////////////////////////////////////////////// Debug log /////////////////////////////////////////////////////////////
     if (!userId) return;
     fetch(`${import.meta.env.VITE_API_URL}/favorites/user-lists/${userId}`)
       .then(res => res.json())

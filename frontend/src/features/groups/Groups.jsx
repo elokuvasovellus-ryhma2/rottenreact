@@ -1,7 +1,7 @@
 import { useState } from "react";
 import "./groups.css";
 
-export function Groups() {
+export default function Groups() {
   const [newGroupName, setNewGroupName] = useState("");
   const [searchQuery, setSearchQuery] = useState("");
   const [searchResults, setSearchResults] = useState([]); 

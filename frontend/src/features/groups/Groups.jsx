@@ -30,10 +30,18 @@ const handleCreateConfirm = async () => {
   setNewGroupName("");
 };
 
-  const handleSearchConfirm = () => {
-    // TODO: myöhemmin tee GET /api/groups/search?q=searchQuery
-    setSearchResults([]); // pidetään tyhjänä kunnes backend on valmis
-  };
+  const handleSearchConfirm = async () => {
+  if (!userId) return;
+
+  const res = await fetch(`${API}/Group/user-groups/${userId}`);
+  const data = await res.json();                 
+  const q = searchQuery.trim().toLowerCase();
+  const results = q
+    ? data.filter(g => g.name?.toLowerCase().includes(q))
+    : data;
+  setSearchResults(results);
+}
+
 
   return (
     <div className="groups-container">

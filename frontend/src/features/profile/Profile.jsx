@@ -1,6 +1,7 @@
 import { useAuth } from '../../shared/contexts/AuthContext';
 import { DeleteSection } from './components/DeleteSection';
 import { ProfileInfo } from './components/ProfileInfo';
+
 import './Profile.css';
 import { AcceptGroupInvites } from './components/AcceptGroupInvites';
 import { DeleteGroups } from './components/DeleteGroups';
@@ -19,11 +20,11 @@ export function Profile() {
         <ProfileInfo user={user} />
         <div className="group-upper">
         <AcceptGroupInvites />
-        <DeleteGroups />
+        <RemoveFromGroup />
         </div>
         <div className="group-lower">
+        <DeleteGroups />
         <MyGroups />
-        <RemoveFromGroup />
         </div>
         <DeleteSection user={user} />
       </div>

@@ -1,21 +1,47 @@
 import { useState } from "react";
 import "./groups.css";
 
-export function Groups() {
+export default function Groups() {
   const [newGroupName, setNewGroupName] = useState("");
   const [searchQuery, setSearchQuery] = useState("");
   const [searchResults, setSearchResults] = useState([]); 
 
-  const handleCreateConfirm = () => {
-    if (!newGroupName.trim()) return;
-    // TODO: myöhemmin tee POST /api/groups/create
-    setNewGroupName("");
-  };
+  const API = import.meta.env.VITE_API_URL;
+  
+const userId = (() => {
+  const s = sessionStorage.getItem("user");
+  try { return s ? JSON.parse(s).id : null; } catch { return null; }
+})();
 
-  const handleSearchConfirm = () => {
-    // TODO: myöhemmin tee GET /api/groups/search?q=searchQuery
-    setSearchResults([]); // pidetään tyhjänä kunnes backend on valmis
-  };
+
+const handleCreateConfirm = async () => {
+  const name = newGroupName.trim();
+  if (!name) return;
+
+  await fetch(`${API}/Group/create`, {              
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({
+      userId: JSON.parse(sessionStorage.getItem("user")).id,
+      name
+    }),
+  });
+
+  setNewGroupName("");
+};
+
+  const handleSearchConfirm = async () => {
+  if (!userId) return;
+
+  const res = await fetch(`${API}/Group/user-groups/${userId}`);
+  const data = await res.json();                 
+  const q = searchQuery.trim().toLowerCase();
+  const results = q
+    ? data.filter(g => g.name?.toLowerCase().includes(q))
+    : data;
+  setSearchResults(results);
+}
+
 
   return (
     <div className="groups-container">

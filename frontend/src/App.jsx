@@ -4,7 +4,7 @@ import { Layout } from './shared/components/Layout';
 import { Home } from './features/home/Home';
 import { Reviews } from './features/reviews/Reviews';
 import FavoritesPage from './features/favorites/Favorites.jsx';
-import { Groups } from './features/groups/Groups';
+import Groups from './features/groups/Groups.jsx';
 import { Showtimes } from './features/showtimes/Showtimes';
 import { Profile } from './features/profile/Profile';
 import  MovieDetail  from './features/movie_search_results/components/MovieDetail';

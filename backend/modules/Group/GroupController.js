@@ -47,17 +47,51 @@ export async function createGroup(req, res) {
 export async function getUserGroups(req, res) {
   try {
     const { userId } = req.params;
+    const q = (req.query.q || "").trim();
+
+    // GLOBAALI HAKU: /Group/user-groups/all[?q=...]
+    if (userId === "all") {
+      if (q) {
+        const { rows } = await pool.query(
+          `SELECT id, name
+             FROM groups
+            WHERE name ILIKE $1
+         ORDER BY name ASC`,
+          [`%${q}%`]
+        );
+        return res.json(rows);
+      } else {
+        const { rows } = await pool.query(
+          `SELECT id, name
+             FROM groups
+         ORDER BY name ASC`
+        );
+        return res.json(rows);
+      }
+    }
+
     if (!userId) return res.status(400).json({ error: "Missing userId" });
 
-    const { rows } = await pool.query(
-      `SELECT id, name
-       FROM groups
-       WHERE owner_user_id = $1
+    if (q) {
+      const { rows } = await pool.query(
+        `SELECT id, name
+           FROM groups
+          WHERE owner_user_id = $1
+            AND name ILIKE $2
        ORDER BY name ASC`,
-      [userId]
-    );
-
-    return res.json(rows);
+        [userId, `%${q}%`]
+      );
+      return res.json(rows);
+    } else {
+      const { rows } = await pool.query(
+        `SELECT id, name
+           FROM groups
+          WHERE owner_user_id = $1
+       ORDER BY name ASC`,
+        [userId]
+      );
+      return res.json(rows);
+    }
   } catch (e) {
     console.error("getUserGroups error:", e);
     return res.status(500).json({ error: "Fetching groups failed" });
@@ -75,7 +109,7 @@ export async function getUserGroups(req, res) {
         `SELECT groups.id, groups.name, group_memberships.role, group_memberships.is_approved
          FROM groups
          JOIN group_memberships ON groups.id = group_memberships.group_id
-         WHERE group_memberships.user_id = $1
+         WHERE group_memberships.user_id = $1 AND group_memberships.is_approved = true
          ORDER BY groups.name ASC`,
         [userId]
       );
@@ -201,4 +235,207 @@ export async function deleteGroupIfAdmin(req, res) {
   }
 }
 
-  
+//Join request
+export async function requestToJoin(req, res) {
+  const client = await pool.connect();
+  try {
+    const { groupId, userId } = req.body;
+    if (!groupId || !userId) {
+      client.release();
+      return res.status(400).json({ error: "groupId & userId required" });
+    }
+
+    await client.query("BEGIN");
+
+    // Lukitse mahdollinen olemassa oleva rivi
+    const { rows } = await client.query(
+      `SELECT is_approved
+         FROM group_memberships
+        WHERE group_id = $1 AND user_id = $2
+        FOR UPDATE`,
+      [groupId, userId]
+    );
+
+    if (rows.length === 0) {
+      await client.query(
+        `INSERT INTO group_memberships (group_id, user_id, role, is_approved)
+         VALUES ($1, $2, 'member', false)`,
+        [groupId, userId]
+      );
+    } else if (rows[0].is_approved) {
+      await client.query("ROLLBACK");
+      return res.status(409).json({ error: "Already a member" });
+    } else {
+      await client.query(
+        `UPDATE group_memberships
+            SET role = 'member', is_approved = false
+          WHERE group_id = $1 AND user_id = $2`,
+        [groupId, userId]
+      );
+    }
+
+    await client.query("COMMIT");
+    return res.status(201).json({ ok: true });
+  } catch (e) {
+    try { await client.query("ROLLBACK"); } catch {}
+    console.error("requestToJoin error:", e);
+    return res.status(500).json({ error: "Join request failed" });
+  } finally {
+    client.release();
+  }
+}
+
+// --- PENDING-LISTA (ei JOINIA users-tauluun) ---
+export async function listPendingForGroup(req, res) {
+  try {
+    const { groupId } = req.params;
+    if (!groupId) return res.status(400).json({ error: "Missing groupId" });
+
+    const { rows } = await pool.query(
+      `SELECT user_id
+         FROM group_memberships
+        WHERE group_id = $1 AND is_approved = false
+        ORDER BY user_id`,
+      [groupId]
+    );
+    return res.json(rows); 
+  } catch (e) {
+    console.error("listPendingForGroup error:", e);
+    return res.status(500).json({ error: e.message || "Failed to fetch pending requests" });
+  }
+}
+
+// --- HYVÄKSY (owner TAI admin) ---
+export async function approveJoin(req, res) {
+  try {
+    const { groupId, userId, adminUserId } = req.body;
+    if (!groupId || !userId || !adminUserId) {
+      return res.status(400).json({ error: "groupId, userId, adminUserId required" });
+    }
+
+    // oikeustarkistus: owner groups-taulusta TAI admin memberinä
+    const { rows } = await pool.query(
+      `
+      SELECT
+        EXISTS (SELECT 1 FROM groups g
+                 WHERE g.id = $1 AND g.owner_user_id = $2) AS is_owner,
+        EXISTS (SELECT 1 FROM group_memberships gm
+                 WHERE gm.group_id = $1 AND gm.user_id = $2
+                   AND gm.is_approved = true AND gm.role = 'admin') AS is_admin
+      `,
+      [groupId, adminUserId]
+    );
+    const allowed = rows[0]?.is_owner || rows[0]?.is_admin;
+    if (!allowed) return res.status(403).json({ error: "Not allowed" });
+
+    const upd = await pool.query(
+      `UPDATE group_memberships
+          SET is_approved = true
+        WHERE group_id = $1 AND user_id = $2 AND is_approved = false`,
+      [groupId, userId]
+    );
+    if (!upd.rowCount) return res.status(404).json({ error: "No pending request" });
+
+    return res.json({ ok: true });
+  } catch (e) {
+    console.error("approveJoin error:", e);
+    return res.status(500).json({ error: e.message || "Approve failed" });
+  }
+}
+
+// --- HYLKÄÄ (owner TAI admin) ---
+export async function rejectJoin(req, res) {
+  try {
+    const { groupId, userId, adminUserId } = req.body;
+    if (!groupId || !userId || !adminUserId) {
+      return res.status(400).json({ error: "groupId, userId, adminUserId required" });
+    }
+
+    const { rows } = await pool.query(
+      `
+      SELECT
+        EXISTS (SELECT 1 FROM groups g
+                 WHERE g.id = $1 AND g.owner_user_id = $2) AS is_owner,
+        EXISTS (SELECT 1 FROM group_memberships gm
+                 WHERE gm.group_id = $1 AND gm.user_id = $2
+                   AND gm.is_approved = true AND gm.role = 'admin') AS is_admin
+      `,
+      [groupId, adminUserId]
+    );
+    const allowed = rows[0]?.is_owner || rows[0]?.is_admin;
+    if (!allowed) return res.status(403).json({ error: "Not allowed" });
+
+    const del = await pool.query(
+      `DELETE FROM group_memberships
+        WHERE group_id = $1 AND user_id = $2 AND is_approved = false`,
+      [groupId, userId]
+    );
+    if (!del.rowCount) return res.status(404).json({ error: "No pending request" });
+
+    return res.json({ ok: true });
+  } catch (e) {
+    console.error("rejectJoin error:", e);
+    return res.status(500).json({ error: e.message || "Reject failed" });
+  }
+}
+
+// Get all the members of a group if the user is a admin (only approved members)
+
+export async function getMembersOfGroupIfAdmin(req, res) {
+  try {
+    const { groupId } = req.params;
+    if (!groupId) return res.status(400).json({ error: "Missing groupId" });
+
+    const { rows } = await pool.query(
+      `SELECT user_id FROM group_memberships WHERE group_id = $1 AND is_approved = true AND role = 'member'`,
+      [groupId]
+    );
+    return res.json(rows);
+  } catch (e) {
+    console.error("getMembersOfGroupIfAdmin error:", e);
+    return res.status(500).json({ error: "Fetching members of group failed" });
+  }
+}
+
+
+
+// Remove a user from a group if the user is a admin
+
+export async function removeFromGroupIfAdmin(req, res) {
+  try {
+    const { groupId, userId } = req.params;
+    const { adminUserId } = req.body;
+    if (!groupId || !userId || !adminUserId) return res.status(400).json({ error: "Missing groupId, userId, or adminUserId" });
+
+    await pool.query('BEGIN');
+
+    try {
+      // Check if the requesting user is admin of the group
+      const { rows: membership } = await pool.query(
+        `SELECT role FROM group_memberships 
+         WHERE group_id = $1 AND user_id = $2 AND role = 'admin'`,
+        [groupId, adminUserId]
+      );
+
+      if (membership.length === 0) {
+        await pool.query('ROLLBACK');
+        return res.status(403).json({ error: "You must be an admin to remove a user from the group" });
+      }
+
+      // Remove the user from the group
+      await pool.query(
+        `DELETE FROM group_memberships WHERE group_id = $1 AND user_id = $2`,
+        [groupId, userId]
+      );
+
+      await pool.query('COMMIT');
+      return res.json({ message: "User removed from group" });
+    } catch (error) {
+      await pool.query('ROLLBACK');
+      throw error;
+    }
+  } catch (e) {
+    console.error("removeFromGroupIfAdmin error:", e);
+    return res.status(500).json({ error: "Removing user from group failed" });
+  }
+}

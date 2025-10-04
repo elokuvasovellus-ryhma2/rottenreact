@@ -29,7 +29,7 @@ export function MyGroups() {
         .then(res => res.json())
         .then(data => {
             console.log(data);
-            alert('Poistettu ryhmästä');
+            alert('höpö höpö admini ei voi poistua itse ryhmästä');
             // Refresh the groups list after successful removal
             fetchGroups();
             // Clear selected group

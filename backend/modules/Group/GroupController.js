@@ -109,7 +109,7 @@ export async function getUserGroups(req, res) {
         `SELECT groups.id, groups.name, group_memberships.role, group_memberships.is_approved
          FROM groups
          JOIN group_memberships ON groups.id = group_memberships.group_id
-         WHERE group_memberships.user_id = $1
+         WHERE group_memberships.user_id = $1 AND group_memberships.is_approved = true
          ORDER BY groups.name ASC`,
         [userId]
       );
@@ -376,5 +376,66 @@ export async function rejectJoin(req, res) {
   } catch (e) {
     console.error("rejectJoin error:", e);
     return res.status(500).json({ error: e.message || "Reject failed" });
+  }
+}
+
+// Get all the members of a group if the user is a admin (only approved members)
+
+export async function getMembersOfGroupIfAdmin(req, res) {
+  try {
+    const { groupId } = req.params;
+    if (!groupId) return res.status(400).json({ error: "Missing groupId" });
+
+    const { rows } = await pool.query(
+      `SELECT user_id FROM group_memberships WHERE group_id = $1 AND is_approved = true AND role = 'member'`,
+      [groupId]
+    );
+    return res.json(rows);
+  } catch (e) {
+    console.error("getMembersOfGroupIfAdmin error:", e);
+    return res.status(500).json({ error: "Fetching members of group failed" });
+  }
+}
+
+
+
+// Remove a user from a group if the user is a admin
+
+export async function removeFromGroupIfAdmin(req, res) {
+  try {
+    const { groupId, userId } = req.params;
+    const { adminUserId } = req.body;
+    if (!groupId || !userId || !adminUserId) return res.status(400).json({ error: "Missing groupId, userId, or adminUserId" });
+
+    await pool.query('BEGIN');
+
+    try {
+      // Check if the requesting user is admin of the group
+      const { rows: membership } = await pool.query(
+        `SELECT role FROM group_memberships 
+         WHERE group_id = $1 AND user_id = $2 AND role = 'admin'`,
+        [groupId, adminUserId]
+      );
+
+      if (membership.length === 0) {
+        await pool.query('ROLLBACK');
+        return res.status(403).json({ error: "You must be an admin to remove a user from the group" });
+      }
+
+      // Remove the user from the group
+      await pool.query(
+        `DELETE FROM group_memberships WHERE group_id = $1 AND user_id = $2`,
+        [groupId, userId]
+      );
+
+      await pool.query('COMMIT');
+      return res.json({ message: "User removed from group" });
+    } catch (error) {
+      await pool.query('ROLLBACK');
+      throw error;
+    }
+  } catch (e) {
+    console.error("removeFromGroupIfAdmin error:", e);
+    return res.status(500).json({ error: "Removing user from group failed" });
   }
 }

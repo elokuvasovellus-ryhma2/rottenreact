@@ -66,7 +66,7 @@ export default function MovieDetail() {
       <h2 style={{ marginTop: 24 }}>Review this movie</h2>
       <ReviewForm movieId={id} />
       {}
-      <Reviews movieId={id} heading="" showPosters={false} />
+      <Reviews movieId={id} heading="" showPosters={false} showMovieTitle={false} />
     </div>
   );
 }

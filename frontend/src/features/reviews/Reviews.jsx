@@ -20,36 +20,71 @@ export function Reviews({ movieId, heading = "Reviews", showPosters = true }) {
     setLoading(true); setErr("");
     fetchLatestReviews({ limit: 24, sort, movieId })
       .then(rows => { if (!ignore) setItems(rows); })
-      .catch(() => setErr("Failed to load reviews"))
-      .finally(() => setLoading(false));
+      .catch(() => { if (!ignore) setErr("Failed to load reviews"); })
+      .finally(() => { if (!ignore) setLoading(false); });
     return () => { ignore = true; };
   }, [sort, movieId]);
 
+  
+  useEffect(() => {
+    const onCreated = (e) => {
+      const r = e.detail;
+      if (!r) return;
+
+      const rMovieId = String(r.movieId ?? r.movie_id ?? "");
+      if (rMovieId !== String(movieId)) return;
+
+      const normalized = {
+        id: r.id ?? `temp-${Date.now()}`,
+        movieId: rMovieId,
+        rating: Number(r.rating ?? 0),
+        title: r.title ?? "",
+        body: r.body ?? "",
+        createdAt: r.createdAt ?? r.created_at ?? new Date().toISOString(),
+        
+        user: r.user || {
+          email: r.user_email ?? r.userEmail ?? "",
+          name:  r.user_name  ?? r.userName  ?? "",
+        },
+        user_email: r.user_email ?? r.userEmail ?? r.user?.email ?? "",
+        user_name:  r.user_name  ?? r.userName  ?? r.user?.name  ?? "",
+      };
+
+      setItems(prev => [normalized, ...prev]);
+    };
+
+    window.addEventListener("review:created", onCreated);
+    return () => window.removeEventListener("review:created", onCreated);
+  }, [movieId]);
+
   const sorted = useMemo(() => {
-    if (sort === "rating") return [...items].sort((a,b)=>b.rating-a.rating);
-    if (sort === "title")  return [...items].sort((a,b)=>(a.title||"").localeCompare(b.title||""));
-    return [...items].sort((a,b)=> new Date(b.createdAt) - new Date(a.createdAt));
+    if (sort === "rating")
+      return [...items].sort((a, b) => Number(b.rating || 0) - Number(a.rating || 0));
+    if (sort === "title")
+      return [...items].sort((a, b) => (a.title || "").localeCompare(b.title || ""));
+    return [...items].sort((a, b) => new Date(b.createdAt || 0) - new Date(a.createdAt || 0));
   }, [items, sort]);
 
- 
   return (
     <div className="reviews-page">
       <header className="header">
         {heading ? <h1>{heading}</h1> : <span />}
         <label className="sort">
           Sort by{" "}
-          <select value={sort} onChange={e => setSort(e.target.value)}>
-            {SORTS.map(s => <option key={s.id} value={s.id}>{s.label}</option>)}
+          <select value={sort} onChange={(e) => setSort(e.target.value)}>
+            {SORTS.map((s) => (
+              <option key={s.id} value={s.id}>{s.label}</option>
+            ))}
           </select>
         </label>
       </header>
 
       {loading && <p>Loading…</p>}
-      {err && <p className="error">{err}</p>}
+      {!loading && err && <p className="error">{err}</p>}
       {!loading && !sorted.length && <p>No reviews yet.</p>}
 
       <section className="grid">
-        {sorted.map(r => (
+        {sorted.map((r) => (
           <ReviewCard key={r.id} review={r} showPoster={showPosters} />
         ))}
       </section>

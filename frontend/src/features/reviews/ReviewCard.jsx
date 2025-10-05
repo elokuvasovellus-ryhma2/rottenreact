@@ -13,8 +13,12 @@ function Stars({ value = 0 }) {
   );
 }
 
-
-export default function ReviewCard({ review, showPoster = true, variant = "normal" }) {
+export default function ReviewCard({
+  review,
+  showPoster = true,
+  showMovieTitle = true,   // 👈 uusi prop
+  variant = "normal",
+}) {
   const [movie, setMovie] = useState(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const token = import.meta.env.VITE_TMDB_TOKEN;
@@ -37,16 +41,10 @@ export default function ReviewCard({ review, showPoster = true, variant = "norma
     return () => { alive = false; };
   }, [review.movieId, token, showPoster]);
 
-  
   const posterSize = variant === "compact" ? "w185" : "w342";
 
-  const handleCardClick = () => {
-    setIsModalOpen(true);
-  };
-
-  const handleCloseModal = () => {
-    setIsModalOpen(false);
-  };
+  const handleCardClick = () => setIsModalOpen(true);
+  const handleCloseModal = () => setIsModalOpen(false);
 
   return (
     <>
@@ -63,37 +61,40 @@ export default function ReviewCard({ review, showPoster = true, variant = "norma
         }}
         aria-label={`View review for ${movie?.title || `Movie #${review.movieId}`}`}
       >
-      {showPoster && (
-        <div className="poster" aria-hidden>
-          {movie?.poster_path ? (
-            <img
-              className="poster-img"
-              src={`https://image.tmdb.org/t/p/${posterSize}${movie.poster_path}`}
-              alt={movie?.title}
-            />
-          ) : (
-            <div className="ph" />
-          )}
+        {showPoster && (
+          <div className="poster" aria-hidden>
+            {movie?.poster_path ? (
+              <img
+                className="poster-img"
+                src={`https://image.tmdb.org/t/p/${posterSize}${movie.poster_path}`}
+                alt={movie?.title}
+              />
+            ) : (
+              <div className="ph" />
+            )}
+          </div>
+        )}
+
+        <div className="meta">
+          {}
+          {showMovieTitle && movie?.title ? (
+            <h3 className="title">{movie.title}</h3>
+          ) : null}
+
+          <Stars value={review.rating} />
+
+          {review.title && <div className="subtitle">{review.title}</div>}
+          {review.body && <p className="body">{review.body}</p>}
+
+          <div className="by">
+            {review.user?.name || review.user_name || ""}
+            {review.user?.email || review.user_email ? (
+              <>  {review.user?.email || review.user_email}</>
+            ) : null}
+            {" · "}
+            {new Date(review.createdAt).toLocaleDateString()}
+          </div>
         </div>
-      )}
-
-      <div className="meta">
-        <h3 className="title">
-          {showPoster ? (movie?.title || `Movie #${review.movieId}`) : (review.title || `Movie #${review.movieId}`)}
-        </h3>
-
-        <Stars value={review.rating} />
-
-        {review.title && <div className="subtitle">{review.title}</div>}
-        {review.body && <p className="body">{review.body}</p>}
-
-        <div className="by">
-          {review.user?.name || review.user_name || ""}
-          {review.user?.email || review.user_email ? <>  {review.user?.email || review.user_email}</> : null}
-          {" · "}
-          {new Date(review.createdAt).toLocaleDateString()}
-        </div>
-      </div>
       </article>
       
       <ReviewToGroup 

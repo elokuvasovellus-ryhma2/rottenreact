@@ -11,23 +11,50 @@ export default function ReviewForm({ movieId }) {
   const [body, setBody] = useState("");
   const [saving, setSaving] = useState(false);
   const [err, setErr] = useState("");
-  const [ok, setOk] = useState("");
 
   if (!isLoggedIn) return <p>Sign In to write movie review.</p>;
 
   async function onSubmit(e) {
     e.preventDefault();
-    setSaving(true); setErr(""); setOk("");
+    setSaving(true);
+    setErr("");
+
     try {
-      await createReview({
+      const saved = await createReview({
         movie_id: String(movieId),
         user_id: user?.id ?? null,
         rating,
         title,
         body,
       });
-      setTitle(""); setBody(""); setRating(0);
-      setOk("Reviewed successfully");
+
+      
+      const reviewForUI = {
+        ...(saved && typeof saved === "object" ? saved : {}),
+        id: (saved && saved.id) ? saved.id : `temp-${Date.now()}`,
+        
+        movieId: String(movieId),
+        movie_id: String(movieId),
+        userId: user?.id ?? null,
+        user_id: user?.id ?? null,
+        
+        user: {
+          email: user?.email ?? "",
+          name:  user?.name ?? user?.username ?? "",
+        },
+        user_email: user?.email ?? "",
+        user_name:  user?.name ?? user?.username ?? "",
+        rating: Number(rating ?? saved?.rating ?? 0),
+        title: title || saved?.title || "",
+        body: body || saved?.body || "",
+        createdAt: saved?.createdAt ?? saved?.created_at ?? new Date().toISOString(),
+      };
+
+      window.dispatchEvent(new CustomEvent("review:created", { detail: reviewForUI }));
+
+      setTitle("");
+      setBody("");
+      setRating(0);
     } catch (e) {
       const server = e?.response?.data;
       const msg = server?.message || server?.error || e?.message || "Error while submitting";
@@ -43,7 +70,6 @@ export default function ReviewForm({ movieId }) {
   return (
     <form onSubmit={onSubmit} className="review-form">
       {err && <div className="rf-error">{err}</div>}
-      {ok  && <div className="rf-ok">{ok}</div>}
 
       <div className="rf-grid">
         <label className="rf-label">
@@ -56,7 +82,7 @@ export default function ReviewForm({ movieId }) {
           <input
             placeholder="Title (optional)"
             value={title}
-            onChange={e=>setTitle(e.target.value)}
+            onChange={(e) => setTitle(e.target.value)}
           />
         </label>
 
@@ -66,7 +92,7 @@ export default function ReviewForm({ movieId }) {
             rows={4}
             placeholder="Write your review…"
             value={body}
-            onChange={e=>setBody(e.target.value)}
+            onChange={(e) => setBody(e.target.value)}
           />
         </label>
 

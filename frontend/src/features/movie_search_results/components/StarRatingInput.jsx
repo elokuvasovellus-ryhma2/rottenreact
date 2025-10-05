@@ -5,7 +5,7 @@ export default function StarRatingInput({ value = 0, onChange }) {
   const [hover, setHover] = useState(0);
 
   
-  const shown = value;
+  const shown = hover || value;
 
   const set = (v) => onChange?.(v);
 
@@ -27,7 +27,7 @@ export default function StarRatingInput({ value = 0, onChange }) {
             if (e.key === "ArrowRight") set(Math.min(5, (value || 0) + 1));
             if (e.key === "ArrowLeft")  set(Math.max(1, (value || 1) - 1));
           }}
-          className={`star ${v <= shown ? "on" : ""} ${hover === v ? "hover" : ""}`}
+          className={`sri-star ${v <= shown ? "on" : ""} ${hover === v ? "hover" : ""}`}
         >
           ★
         </button>

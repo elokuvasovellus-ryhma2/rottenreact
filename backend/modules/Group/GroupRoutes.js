@@ -1,5 +1,5 @@
 import { Router } from "express";
-import { createGroup, getUserGroups, getUserEveryGroup, leaveGroup, getGroupsWhereAdmin , deleteGroupIfAdmin,requestToJoin,listPendingForGroup, approveJoin, rejectJoin,  } from "./GroupController.js";
+import { createGroup, getUserGroups, getUserEveryGroup,leaveGroup, getGroupsWhereAdmin , deleteGroupIfAdmin,requestToJoin,listPendingForGroup, approveJoin, rejectJoin, getMembersOfGroupIfAdmin, removeFromGroupIfAdmin } from "./GroupController.js";
 const router = Router();
 
 router.post("/create", createGroup);
@@ -12,5 +12,7 @@ router.post("/join/request", requestToJoin);
 router.get("/join/pending/:groupId", listPendingForGroup);
 router.post("/join/approve", approveJoin);
 router.post("/join/reject", rejectJoin);
+router.get("/get-members/:groupId", getMembersOfGroupIfAdmin);
+router.post("/remove-member/:groupId/:userId", removeFromGroupIfAdmin);
 
 export default router;

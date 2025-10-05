@@ -1,16 +1,27 @@
-import { HomeExampleComponent } from './components/HomeExampleComponent';
+// src/features/home/Home.jsx
 import MovieSearch from './components/MoviesSearch';
 import LatestReviewsRow from './components/LatestReviewsRow';
+import InTheatresNow from './components/InTheatresNow';
+import './Home.css';
 
 export function Home() {
   return (
-    <div className="home-page">
-
-      <div className="featured-content">
+    <div className="home">
+      <section className="section">
+        
         <MovieSearch />
-        <HomeExampleComponent />
+      </section>
+
+      <section className="section">
+        
+        {}
+        <InTheatresNow speed={0.8} limit={100} />
+      </section>
+
+      <section className="section">
+        
         <LatestReviewsRow />
-      </div>
+      </section>
     </div>
   );
 }

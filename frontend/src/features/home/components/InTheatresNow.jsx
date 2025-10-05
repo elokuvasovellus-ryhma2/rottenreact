@@ -1,21 +1,33 @@
 import { useEffect, useMemo, useRef, useState } from "react";
 import "./InTheatresNow.css";
 
-
 export default function InTheatresNow({
   limit = 100,
   speed = 0.6,
-  hover = "pause",
-  slowFactor = 0.25,
+  hover = "pause",      // "pause" | "slow" | "none"
+  slowFactor = 0.25,    // kun hover="slow", käytä tätä kerrointa
+  onReady,              // valinnainen: ilmoita kun data (+kuvat) on valmis
 }) {
   const [shows, setShows] = useState([]);
+  const [loading, setLoading] = useState(true);
   const scrollerRef = useRef(null);
-  const hoverRef = useRef(false); 
+  const hoverRef = useRef(false);
 
-  
+  // pieni apuri: preloadaa kuvat -> ei layout-shiftiä kun tulevat ruutuun
+  const preload = (src) =>
+    new Promise((resolve) => {
+      if (!src) return resolve();
+      const img = new Image();
+      img.onload = img.onerror = () => resolve();
+      img.src = src;
+    });
+
   useEffect(() => {
+    let alive = true;
     (async () => {
       try {
+        setLoading(true);
+
         const d = new Date();
         const dd = String(d.getDate()).padStart(2, "0");
         const mm = String(d.getMonth() + 1).padStart(2, "0");
@@ -36,9 +48,9 @@ export default function InTheatresNow({
           const s = nodes[i];
           const get = (tag) => s.getElementsByTagName(tag)[0]?.textContent || "";
 
-          const imgLarge = get("EventLargeImagePortrait");
+          const imgLarge  = get("EventLargeImagePortrait");
           const imgMedium = get("EventMediumImagePortrait");
-          const imgSmall = get("EventSmallImagePortrait");
+          const imgSmall  = get("EventSmallImagePortrait");
 
           list.push({
             id: get("ID"),
@@ -50,18 +62,35 @@ export default function InTheatresNow({
             imgSmall,
           });
         }
+
+        // Preloadaa vähintään medium (tai large/small fallback) – pehmeämpi render
+        const previews = list.map(
+          (x) => x.imgMedium || x.imgLarge || x.imgSmall || ""
+        );
+        await Promise.allSettled(previews.map(preload));
+
+        if (!alive) return;
         setShows(list);
       } catch (e) {
         console.error("Finnkino fetch failed:", e);
-        setShows([]);
+        if (alive) setShows([]);
+      } finally {
+        if (alive) {
+          setLoading(false);
+          onReady?.();
+        }
       }
     })();
-  }, [limit]);
 
-  
+    return () => {
+      alive = false;
+    };
+  }, [limit, onReady]);
+
+  // saumaton looppi: tuplaa lista
   const looped = useMemo(() => shows.concat(shows), [shows]);
 
-  
+  // autoscroll + hover-käyttäytyminen
   useEffect(() => {
     const el = scrollerRef.current;
     if (!el || !shows.length) return;
@@ -69,7 +98,6 @@ export default function InTheatresNow({
     let raf;
     const tick = () => {
       let v = speed;
-
       if (hoverRef.current) {
         if (hover === "pause") v = 0;
         else if (hover === "slow") v = Math.max(0, speed * slowFactor);
@@ -86,12 +114,10 @@ export default function InTheatresNow({
 
     raf = requestAnimationFrame(tick);
 
-    
     const enter = () => (hoverRef.current = true);
     const leave = () => (hoverRef.current = false);
     el.addEventListener("mouseenter", enter);
     el.addEventListener("mouseleave", leave);
-    
     el.addEventListener("touchstart", enter, { passive: true });
     el.addEventListener("touchend", leave);
 
@@ -114,43 +140,53 @@ export default function InTheatresNow({
 
   return (
     <section className="theatres-row">
-      <h2>In theaters right Now</h2>
-      <div className="theatres-scroll" ref={scrollerRef}>
-        {looped.map((s, i) => {
-          const key = `${s.id}-${i}`;
-          const src = s.imgMedium || s.imgLarge || s.imgSmall || "";
-          const srcSet = [
-            s.imgSmall ? `${s.imgSmall} 185w` : "",
-            s.imgMedium ? `${s.imgMedium} 342w` : "",
-            s.imgLarge ? `${s.imgLarge} 500w` : "",
-          ]
-            .filter(Boolean)
-            .join(", ");
-          const sizes = "(max-width: 768px) 160px, 180px";
+      <h2>In theaters right now</h2>
 
-          return (
-            <div key={key} className="theatre-card">
-              <img
-                className="poster"
-                src={src}
-                srcSet={srcSet}
-                sizes={sizes}
-                alt={s.title}
-                loading="lazy"
-                decoding="async"
-              />
-              <h3 className="title" title={s.title}>
-                {s.title}
-              </h3>
-              <div className="meta">
-                <span className="time">{fmtTime(s.start)}</span>
-                <span className="theatre" title={s.theatre}>
-                  {s.theatre}
-                </span>
+      <div className="theatres-scroll" ref={scrollerRef}>
+        {loading
+          ? // SKELETON-kortit pitävät paikan heti, eivätkä “pompsahda”
+            Array.from({ length: 12 }).map((_, i) => (
+              <div key={`sk-${i}`} className="theatre-card skeleton">
+                <div className="poster skeleton-ph" />
+                <div className="line skeleton-ph" />
+                <div className="line small skeleton-ph" />
               </div>
-            </div>
-          );
-        })}
+            ))
+          : looped.map((s, i) => {
+              const key = `${s.id}-${i}`;
+              const src = s.imgMedium || s.imgLarge || s.imgSmall || "";
+              const srcSet = [
+                s.imgSmall ? `${s.imgSmall} 185w` : "",
+                s.imgMedium ? `${s.imgMedium} 342w` : "",
+                s.imgLarge ? `${s.imgLarge} 500w` : "",
+              ]
+                .filter(Boolean)
+                .join(", ");
+              const sizes = "(max-width: 768px) 160px, 180px";
+
+              return (
+                <div key={key} className="theatre-card">
+                  <img
+                    className="poster"
+                    src={src}
+                    srcSet={srcSet}
+                    sizes={sizes}
+                    alt={s.title}
+                    loading="lazy"
+                    decoding="async"
+                  />
+                  <h3 className="title" title={s.title}>
+                    {s.title}
+                  </h3>
+                  <div className="meta">
+                    <span className="time">{fmtTime(s.start)}</span>
+                    <span className="theatre" title={s.theatre}>
+                      {s.theatre}
+                    </span>
+                  </div>
+                </div>
+              );
+            })}
       </div>
     </section>
   );

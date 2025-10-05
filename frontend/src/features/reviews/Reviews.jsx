@@ -6,7 +6,7 @@ import "./Reviews.css";
 const SORTS = [
   { id: "new",    label: "Newest" },
   { id: "rating", label: "Rating" },
-  { id: "title",  label: "Title"  },
+ // { id: "title",  label: "Title"  }, Ei ole aakkosjärjestyksessä
 ];
 
 export function Reviews({ movieId, heading = "Reviews", showPosters = true }) {

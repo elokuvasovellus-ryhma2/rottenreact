@@ -4,7 +4,7 @@
   display: flex; align-items: center; justify-content: space-between;
   margin-bottom: .75rem; border-bottom: 1px solid #2b2b2b; padding-bottom: .5rem;
 }
-.lrw h2 { margin: 0; font-size: 1.25rem; font-weight: 700; }
+.lrw h2 { margin: 0; font-size: 1.7rem; font-weight: 700; }
 
 .lrw__nav { display: flex; gap: .5rem; }
 .lrw__btn {

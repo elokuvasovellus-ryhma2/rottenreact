@@ -1,23 +1,37 @@
-/* 
- * App.css - Component-specific styles for the App component
- * 
- * This file should contain styles that are specific to the App component
- * and its direct children. Use this for:
- * 
- * 1. App component layout and structure
- * 2. Styles for components that are always rendered by App
- * 3. App-specific animations and transitions
- * 4. Styles that don't belong in global (index.css) or other component files
- * 
- * Examples of what to put here:
- * - .app { ... } - Main app container styles
- * - .main-content { ... } - Main content area styles
- * - App-specific animations
- * - Styles for components that are direct children of App
- * 
- * Examples of what NOT to put here:
- * - Global resets (use index.css)
- * - Navbar/Footer styles (use their own CSS files)
- * - Page-specific styles (use feature-specific CSS files)
- * - Utility classes (consider using a separate utilities.css)
- */
+/* 1) Sivujen yhteinen kanvaasi */
+.main-content {
+  /* yhtenäinen tumma teema kaikkialla */
+  background: #000;
+  color: #e5e7eb;
+
+  /* estää margin collapse -ilmiön */
+  display: flow-root;         /* moderni ja siisti tapa */
+  /* vaihtoehtoisesti: overflow:auto; tai border-top:1px solid transparent; */
+
+  /* globaali tilananto: ei enää teksti kiinni navissa */
+  padding: 24px 24px 40px;    /* top, sides, bottom */
+  min-height: 100vh;
+}
+
+/* 2) Yhtenäinen pystyrytmi: jokaisen suoran lapsen väliin tilaa */
+.main-content > * + * {
+  margin-top: 24px;
+}
+
+/* 3) Varmistus: estä ensimmäisen lapsen ylä-margini (margin collapse) */
+.main-content > * {
+  margin-block-start: 0;
+}
+
+/* 4) (Valinnainen mutta suositeltava) typografian oletusmarginit pois
+   – väli hallitaan nyt rytmisäännöllä yllä */
+h1, h2, h3, h4, h5, h6,
+p, ul, ol, section, article {
+  margin-block: 0;
+}
+
+/* 5) (Valinnainen) Yhtenäinen sivuleveys-kontti sivuja varten */
+.container {
+  max-width: 1200px;
+  margin-inline: auto;
+}

@@ -1,64 +1,76 @@
 .movie-detail {
-    max-width: 800px;
-    margin: 20px auto;
-    padding: 20px;
-    background-color: rgba(0, 0, 0, 0.5);
-    border-radius: 8px;
-    box-shadow: 0 0 10px rgba(255, 255, 255, 0.5);
+  max-width: 1000px;
+  margin: 20px auto;
+  padding: 20px;
+  background: rgba(0,0,0,0.55);
+  border-radius: 10px;
+  box-shadow: 0 0 10px rgba(255,255,255,0.35);
+  color: #fff;
 }
 
-.movie-detail img {
-    height: 500px;
-    border-radius: 8px;
-    box-shadow: 0 0 10px rgba(255, 255, 255, 0.5);
+
+.movie-detail > * + * { margin-top: 18px; }
+
+
+.movie-header {
+  display: flex;
+  gap: 20px;
+  align-items: flex-start;
 }
 
-.movie-detail h2 {
-    font-size: 2em;
-    margin-bottom: 10px;
-    color: #ffffff;
+.poster-wrap { flex-shrink: 0; }
+.movie-poster {
+  width: 190px;              
+  height: auto;
+  border-radius: 8px;
+  box-shadow: 0 6px 16px rgba(0,0,0,0.5);
+  display: block;
+}
+.poster-ph {
+  width: 300px;
+  aspect-ratio: 2/3;
+  border-radius: 8px;
+  background: #111827;
 }
 
-.movie-detail .movie-rating {
-    display: flex;
-    align-items: center;
-    margin-bottom: 10px;
-    color: var(--primary);
-    font-size: 1.5rem;
+.movie-info { flex: 1; min-width: 0; } 
+
+.movie-title {
+  margin: 0 0 8px;
+  font-size: 28px;
+  font-weight: 700;
 }
 
-.movie-detail .movie-overview {
-    margin-bottom: 10px;
-    color: #ffffff;
+
+.movie-meta {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin: 4px 0 12px;
+}
+.badge {
+  background: rgba(255,255,255,.08);
+  border: 1px solid rgba(255,255,255,.12);
+  color: #e5e7eb;
+  padding: 6px 10px;
+  border-radius: 999px;
+  font-size: 0.92rem;
 }
 
-.movie-detail .star-rating label {
-    margin: 10px 0;
-    color: #ffffff;
-    font-size: 1.5rem;
+.movie-overview {
+  margin: 0;
+  line-height: 1.5;
+  color: #f3f4f6;
 }
 
-.button-container {
-    margin: 20px;
+.actions { margin-top: 12px; }
+
+.section-title {
+  margin-top: 16px;
+  font-size: 22px;
+  font-weight: 700;
 }
 
-.button-container button {
-    margin-right: 10px;
-    padding: 10px 15px;
-    font-size: 1em;
-    cursor: pointer;
-    border: none;
-    border-radius: 5px;
-    background-color: var(--primary);
-    color: #ffffff;
-    transition: background-color 0.3s;
-}
 
-.button-container button:hover {
-    background-color: #ffffff;
-    color: var(--primary);
-}
+.review-form { margin-top: 8px; }
 
-.button-container .back-button ion-icon {
-    position: center;
-}

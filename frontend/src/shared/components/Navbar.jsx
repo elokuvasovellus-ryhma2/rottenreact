@@ -11,7 +11,8 @@ export function Navbar() {
     { path: '/reviews', label: 'REVIEWS' },
     ...(isLoggedIn ? [
       { path: '/favorites', label: 'FAVORITES' },
-      { path: '/groups', label: 'GROUPS' }
+      { path: '/groups', label: 'GROUPS' },
+      { path: '/mygroups', label: 'MY_GROUPS' }
     ] : []),
     { path: '/showtimes', label: 'SHOWTIMES' }
   ];

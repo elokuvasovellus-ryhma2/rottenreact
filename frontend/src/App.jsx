@@ -12,6 +12,7 @@ import  MovieSearchPage from './features/movie_search_results/components/MovieSe
 import SignIn from "./features/Auth/SignIn";
 import SignUp from "./features/Auth/SignUp";
 import SharedFavoritesPage from "./features/favorites/SharedFavoritesPage";
+import { MyGroupsCustom } from './features/mygroups/MyGroupsCustom.jsx';
 
 
 function App() {
@@ -31,6 +32,7 @@ function App() {
             <Route path="/signin" element={<SignIn />} />
             <Route path="/signup" element={<SignUp />} />
             <Route path="/profile" element={<Profile />} />
+            <Route path="/mygroups" element={<MyGroupsCustom />} />
           </Routes>
         </Layout>
       </BrowserRouter>

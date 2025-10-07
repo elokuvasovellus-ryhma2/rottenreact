@@ -11,6 +11,8 @@ import  MovieDetail  from './features/movie_search_results/components/MovieDetai
 import  MovieSearchPage from './features/movie_search_results/components/MovieSearchPage.jsx';
 import SignIn from "./features/Auth/SignIn";
 import SignUp from "./features/Auth/SignUp";
+import SharedFavoritesPage from "./features/favorites/SharedFavoritesPage";
+import { MyGroupsCustom } from './features/mygroups/MyGroupsCustom.jsx';
 
 
 function App() {
@@ -22,6 +24,7 @@ function App() {
             <Route path="/" element={<Home />} />
             <Route path="/reviews" element={<Reviews />} />
             <Route path="/favorites" element={<FavoritesPage />} />
+            <Route path="/favorites/shared/:token" element={<SharedFavoritesPage />} />
             <Route path="/groups" element={<Groups />} />
             <Route path="/showtimes" element={<Showtimes />} />
             <Route path="/search" element={<MovieSearchPage />} />
@@ -29,6 +32,7 @@ function App() {
             <Route path="/signin" element={<SignIn />} />
             <Route path="/signup" element={<SignUp />} />
             <Route path="/profile" element={<Profile />} />
+            <Route path="/mygroups" element={<MyGroupsCustom />} />
           </Routes>
         </Layout>
       </BrowserRouter>

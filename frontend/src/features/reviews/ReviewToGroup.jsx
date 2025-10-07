@@ -12,33 +12,66 @@ function Stars({ value = 0 }) {
   );
 }
 
-function handleShareToGroup() {
-  alert("Backendiin reitti ja tämä toimivaksi");
+async function handleShareToGroup(reviewId, groupId, movieId, userId) {
+  try {
+    const response = await fetch(`${import.meta.env.VITE_API_URL}/group-pinned-movies`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        groupId: groupId,
+        movieId: movieId,
+        reviewId: reviewId,
+        userId: userId
+      })
+    });
+
+    if (response.ok) {
+      alert('Review pinned to group successfully!');
+    } else {
+      const errorData = await response.json();
+      alert(`Error: ${errorData.error || 'Failed to pin review to group'}`);
+    }
+  } catch (error) {
+    console.error('Error pinning review to group:', error);
+    alert('Error pinning review to group');
+  }
 }
 
 export default function ReviewToGroup({ review, movie, isOpen, onClose }) {
+  
   if (!isOpen) return null;
 
+  const API = import.meta.env.VITE_API_URL;
+  const userId = (() => {
+    try { return JSON.parse(sessionStorage.getItem("user") || "null")?.id ?? null; }
+    catch { return null; }
+  })();
+
   const [groups, setGroups] = useState([]);
+  const [selectedGroupId, setSelectedGroupId] = useState('');
+  const [loading, setLoading] = useState(false);
 
-  // Test data for groups before API is ready
-  const testGroups = [
-    { id: 1, name: "ScifiKerho" },
-    { id: 2, name: "LänkkäriKerho" },
-    { id: 3, name: "KummeliMiesKerho" },
-    { id: 4, name: "Clint EastwoodKerho" },
-    { id: 5, name: "TarantinoKerho" }
-  ];
-
+  // Fetch user's groups when component mounts
   useEffect(() => {
-    // Use test data for now, uncomment the API call when ready
-    setGroups(testGroups);
-    
-    // fetch(`${import.meta.env.VITE_API_URL}/groups`)
-    //   .then(res => res.json())
-    //   .then(data => setGroups(data))
-    //   .catch(err => console.error('Virhe ryhmien haussa:', err));
-  }, []);
+    if (!userId) return;
+    fetchUserGroups();
+  }, [userId]);
+
+  const fetchUserGroups = async () => {
+    if (!userId) return;
+    setLoading(true);
+    try {
+      const res = await fetch(`${API}/Group/user-every-group/${userId}`);
+      const data = await res.json();
+      setGroups(data || []);
+    } catch (error) {
+      console.error('Error fetching user groups:', error);
+    } finally {
+      setLoading(false);
+    }
+  };
 
 
   return (
@@ -93,17 +126,35 @@ export default function ReviewToGroup({ review, movie, isOpen, onClose }) {
 
             <div className="action-buttons">
               {/* Select group */}
-              <select defaultValue="">
-                <option value="" disabled>Valitse ryhmä…</option>
-                {
+              <select 
+                value={selectedGroupId} 
+                onChange={(e) => setSelectedGroupId(e.target.value)}
+                disabled={loading}
+              >
+                <option value="" disabled>
+                  {loading ? "Loading groups..." : "Choose a group..."}
+                </option>
+                {groups.length === 0 && !loading ? (
+                  <option value="" disabled>No groups available</option>
+                ) : (
                   groups.map(group => {
                     return <option key={group.id} value={group.id}>{group.name}</option>
                   })
-                }
+                )}
               </select>
               
-              <button className="action-btn primary" onClick={handleShareToGroup}>
-                Share to Group
+              <button 
+                className="action-btn primary" 
+                onClick={() => {
+                  if (selectedGroupId) {
+                    handleShareToGroup(review.id, selectedGroupId, review.movieId, userId);
+                  } else {
+                    alert('Please select a group first');
+                  }
+                }}
+                disabled={!selectedGroupId || loading || groups.length === 0}
+              >
+                {loading ? "Loading..." : "Pin Review to Group"}
               </button>
             </div>
           </div>

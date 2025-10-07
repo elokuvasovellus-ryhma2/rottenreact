@@ -5,6 +5,7 @@ import authRoutes from './modules/auth/authRoutes.js';
 import reviewRoutes from './modules/reviews/reviewRoutes.js';
 import favoritesRoutes from './modules/favorites/favoritesRoutes.js';
 import GroupRoutes from "./modules/Group/GroupRoutes.js";
+import groupPinnedMoviesRoutes from './modules/group_pinned_movies/group_pinned_moviesRoutes.js';
 import { pool } from './config/database.js';
 
 dotenv.config();
@@ -20,6 +21,7 @@ app.use('/users', authRoutes);
 app.use('/api/reviews', reviewRoutes);
 app.use('/favorites', favoritesRoutes);
 app.use('/Group',GroupRoutes);
+app.use('/group-pinned-movies', groupPinnedMoviesRoutes);
 
 app.use((err, req, res, next) => {
   console.error(err);

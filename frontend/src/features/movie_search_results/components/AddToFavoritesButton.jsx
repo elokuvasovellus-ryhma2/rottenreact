@@ -22,7 +22,7 @@ export function AddToFavoritesButton({ userId, movieId }) {
       return;
     }
 
-    try {
+    try { console.log("Sending to backend:", { listId: selectedListId, movieId });
       await fetch(`${import.meta.env.VITE_API_URL}/favorites/add`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },

@@ -3,20 +3,16 @@
   "version": "1.0.0",
   "description": "RottenReact Backend API - Simple Auth & Users",
   "main": "index.js",
+  "type": "module",
   "scripts": {
     "start": "node index.js",
     "dev": "cross-env NODE_ENV=development nodemon index.js",
     "devStart": "cross-env NODE_ENV=development nodemon index.js",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "cross-env NODE_ENV=test NODE_OPTIONS=--experimental-vm-modules jest --runInBand"
   },
-  "keywords": [
-    "api",
-    "auth",
-    "users"
-  ],
+  "keywords": ["api", "auth", "users"],
   "author": "",
   "license": "ISC",
-  "type": "module",
   "dependencies": {
     "bcrypt": "^6.0.0",
     "bcryptjs": "^2.4.3",
@@ -29,6 +25,8 @@
   },
   "devDependencies": {
     "cross-env": "^10.0.0",
-    "nodemon": "^3.1.10"
+    "nodemon": "^3.1.10",
+    "jest": "^29.7.0",
+    "supertest": "^7.1.1"
   }
 }

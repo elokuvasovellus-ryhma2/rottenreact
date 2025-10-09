@@ -17,20 +17,39 @@ export default function Groups() {
   })();
 
   const handleCreateConfirm = async () => {
-    const name = newGroupName.trim();
-    if (!name) return;
+  const name = newGroupName.trim();
+  if (!name) return;
 
-    await fetch(`${API}/Group/create`, {
+  setFeedback(null);
+
+  try {
+    const res = await fetch(`${API}/Group/create`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({
-        userId: JSON.parse(sessionStorage.getItem("user")).id,
+        userId,
         name,
       }),
     });
 
-    setNewGroupName("");
-  };
+    if (res.ok) {
+      setFeedback({ type: "success", text: "Group created successfully." });
+      setNewGroupName("");
+    } else {
+      let msg = "Failed to create group.";
+      try {
+        const data = await res.json();
+        if (data?.error) msg = data.error;
+      } catch { /* empty */ }
+      if (res.status === 409) {
+        msg = "A group with this name already exists.";
+      }
+      setFeedback({ type: "error", text: msg });
+    }
+  } catch {
+    setFeedback({ type: "error", text: "Network error while creating group." });
+  }
+};
 
   const handleSearchConfirm = async () => {
     const res = await fetch(`${API}/Group/user-groups/all`);
@@ -61,7 +80,7 @@ export default function Groups() {
         try {
           const data = await res.json();
           if (data?.error) msg = data.error;
-        } catch {}
+        } catch { /* empty */ }
         if (res.status === 409) msg = "You are already a member.";
         setFeedback({ type: "error", text: msg });
       }

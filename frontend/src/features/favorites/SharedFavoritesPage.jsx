@@ -31,6 +31,7 @@ export default function SharedFavoritesPage() {
         if (!alive) return;
         setMeta(data.list || null);
         setItems(Array.isArray(data.items) ? data.items : []);
+      // eslint-disable-next-line no-unused-vars
       } catch (e) {
         if (!alive) return;
         setErr("Shared list not found or is no longer public.");

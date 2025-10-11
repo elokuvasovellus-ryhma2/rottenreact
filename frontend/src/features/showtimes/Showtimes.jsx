@@ -3,6 +3,11 @@ import"./showtimes.css";
 
 
 export function Showtimes() {
+  const API = import.meta.env.VITE_API_URL;
+  const userId = (() => {
+    try { return JSON.parse(sessionStorage.getItem("user") || "null")?.id ?? null; }
+    catch { return null; }
+  })();
 
   //tilamuuttujat
   //areas lista kaikista finnkinon teattereista
@@ -13,6 +18,11 @@ export function Showtimes() {
   const [shows, setShows] = useState([])
   const [selectedArea, setSelectedArea] = useState('')
   const [nameInput, setNameInput] = useState('')
+  const [isPopupOpen, setIsPopupOpen] = useState(false)
+  const [selectedShow, setSelectedShow] = useState(null)
+  const [groups, setGroups] = useState([])
+  const [selectedGroup, setSelectedGroup] = useState('')
+  const [invitationText, setInvitationText] = useState('')
 
   //pad varmistaa että kuukausi ja päivä on kahden numeron mittaisia
   //todayInput muodostaa päivämäärän yyyy-mm-dd.
@@ -94,6 +104,12 @@ export function Showtimes() {
       })
   }, [])
 
+  // Hae käyttäjän ryhmät
+  useEffect(() => {
+    if (!userId) return;
+    fetchUserGroups();
+  }, [userId]);
+
   //käsittelee paikkakunnanvalinnan ja päivittää tilan
   const handleAreaChange = (e) => {
     const areaId = e.target.value
@@ -124,6 +140,64 @@ export function Showtimes() {
     return d.toLocaleTimeString('fi-FI', { hour: '2-digit', minute: '2-digit' })
   }
 
+  //käsittelee popup-ikkunan avaamisen ja sulkemisen
+  const handleOpenPopup = (show) => {
+    setSelectedShow(show)
+    setIsPopupOpen(true)
+  }
+
+  const handleClosePopup = () => {
+    setIsPopupOpen(false)
+    setSelectedShow(null)
+    setSelectedGroup('')
+    setInvitationText('')
+  }
+
+  // Hae käyttäjän kaikki ryhmät
+  const fetchUserGroups = async () => {
+    if (!userId) return;
+    try {
+      const res = await fetch(`${API}/Group/user-every-group/${userId}`);
+      const data = await res.json();
+      setGroups(data || []);
+    } catch (error) {
+      console.error('Error fetching user groups:', error);
+    }
+  };
+
+  // Käsittelee ryhmän valinnan
+  const handleGroupChange = (e) => {
+    setSelectedGroup(e.target.value);
+  };
+
+  // Käsittelee kutsuviestin muutoksen
+  const handleInvitationChange = (e) => {
+    setInvitationText(e.target.value);
+  };
+
+  // Lähetä kutsu (placeholder funktio)
+  const handleSendInvitation = () => {
+    if (!selectedGroup || !selectedShow) {
+      alert('Valitse ryhmä ja elokuva!');
+      return;
+    }
+    
+    alert('Sending invitation:' +
+      'groupId: ' + selectedGroup +
+      'Leffan nimi: ' + selectedShow.title +
+      'Teatteri: ' + selectedShow.theatre +
+      'Sali: ' + selectedShow.auditorium +
+      'Näytösaika: ' + selectedShow.start +
+      'Päivä: ' + dateInput +
+      'Alue: ' + selectedArea +
+      'Kutsuviesti: ' + invitationText
+    );
+    
+    // TODO: Implement actual API call to send invitation
+    alert('Kutsu lähetetty!');
+    handleClosePopup();
+  };
+
   return (
     <div className="showtimes">
       <select onChange={handleAreaChange} defaultValue="">
@@ -148,6 +222,7 @@ export function Showtimes() {
         onChange={handleNameChange}
       />
 
+
       <ul>
         {
           shows.length === 0 && selectedArea
@@ -161,15 +236,89 @@ export function Showtimes() {
                 return (
                   <li key={show.id}>
                     <img
-                    classname="images"
+                    className="images"
                     src={show.images}
                     />
-                    {fmtTime(show.start)} — {show.title} ({show.theatre}{show.auditorium ? `, ${show.auditorium}` : ''})
+                    <span>
+                      {fmtTime(show.start)} — {show.title} ({show.theatre}{show.auditorium ? `, ${show.auditorium}` : ''})
+                    </span>
+                    <button 
+                      onClick={() => handleOpenPopup(show)} 
+                      className="movie-popup-button"
+                    >
+                      Näytä tiedot
+                    </button>
                   </li>
                 )
               })
         }
       </ul>
+
+      {/* Popup window */}
+      {isPopupOpen && (
+        <div className="popup-overlay" onClick={handleClosePopup}>
+          <div className="popup-content" onClick={(e) => e.stopPropagation()}>
+            <div className="popup-header">
+              <h2>Pyydä seuraa näytökseen</h2>
+              <button className="close-button" onClick={handleClosePopup}>
+                ×
+              </button>
+            </div>
+            <div className="popup-body">
+              {selectedShow && (
+                <>
+                  <div className="movie-popup-image">
+                    <img src={selectedShow.images} alt={selectedShow.title} />
+                  </div>
+                  <h3>{selectedShow.title}</h3>
+                  <p>Näytösaika: {fmtTime(selectedShow.start)}</p>
+                  <p>Teatteri: {selectedShow.theatre}</p>
+                  {selectedShow.auditorium && (
+                    <p>Sali: {selectedShow.auditorium}</p>
+                  )}
+                  <p>Päivä: {dateInput}</p>
+                  <p>Alue: {selectedArea ? areas.find(area => area.id === selectedArea)?.name : 'Ei valittu'}</p>
+                </>
+              )}
+              <div className="popup-text">
+                <h3>Valitse ryhmä ja kirjoita kutsuviesti</h3>
+                
+                <div className="group-selection">
+                  <label htmlFor="group-select">Valitse ryhmä:</label>
+                  <select 
+                    id="group-select"
+                    value={selectedGroup} 
+                    onChange={handleGroupChange}
+                    className="group-dropdown"
+                  >
+                    <option value="">Valitse ryhmä...</option>
+                    {groups.map((group) => (
+                      <option key={group.id} value={group.id}>
+                        {group.name}
+                      </option>
+                    ))}
+                  </select>
+                </div>
+
+                <div className="invitation-text">
+                  <label htmlFor="invitation-input">Kutsuviesti:</label>
+                  <input 
+                    id="invitation-input"
+                    type="text" 
+                    placeholder="Kirjoita tähän vapaavalintainen kutsu näytökseen..." 
+                    value={invitationText}
+                    onChange={handleInvitationChange}
+                  />
+                </div>
+
+                <button className="popup-button" onClick={handleSendInvitation}>
+                  Lähetä kutsu
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   )
 }

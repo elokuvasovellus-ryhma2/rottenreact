@@ -7,6 +7,7 @@ import reviewRoutes from './modules/reviews/reviewRoutes.js';
 import favoritesRoutes from './modules/favorites/favoritesRoutes.js';
 import GroupRoutes from './modules/Group/GroupRoutes.js';
 import groupPinnedMoviesRoutes from './modules/group_pinned_movies/group_pinned_moviesRoutes.js';
+import groupFinnkinoItemsRoutes from './modules/group_finnkino_items/group_finnkino_itemsRoutes.js';
 
 const app = express();
 
@@ -21,6 +22,7 @@ app.use('/api/reviews', reviewRoutes);
 app.use('/favorites', favoritesRoutes);
 app.use('/Group', GroupRoutes);
 app.use('/group-pinned-movies', groupPinnedMoviesRoutes);
+app.use('/group-finnkino-items', groupFinnkinoItemsRoutes);
 
 // Healthcheck, hyödyllinen testeissä
 app.get('/health', (_req, res) => {

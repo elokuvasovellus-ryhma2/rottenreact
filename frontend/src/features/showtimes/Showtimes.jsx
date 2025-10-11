@@ -1,4 +1,5 @@
 import { useEffect, useState } from 'react'
+import { finnkinoItemsAPI } from '../../shared/api/finnkinoItems.js'
 import"./showtimes.css";
 
 
@@ -175,33 +176,45 @@ export function Showtimes() {
     setInvitationText(e.target.value);
   };
 
-  // Lähetä kutsu (placeholder funktio)
-  const handleSendInvitation = () => {
+  // Send invitation to group
+  const handleSendInvitation = async () => {
     if (!selectedGroup || !selectedShow) {
-      alert('Valitse ryhmä ja elokuva!');
+      alert('Please select a group and movie!');
       return;
     }
     
-    alert('Sending invitation:' +
-      'groupId: ' + selectedGroup +
-      'Leffan nimi: ' + selectedShow.title +
-      'Teatteri: ' + selectedShow.theatre +
-      'Sali: ' + selectedShow.auditorium +
-      'Näytösaika: ' + selectedShow.start +
-      'Päivä: ' + dateInput +
-      'Alue: ' + selectedArea +
-      'Kutsuviesti: ' + invitationText
-    );
+    if (!userId) {
+      alert('You must be logged in!');
+      return;
+    }
     
-    // TODO: Implement actual API call to send invitation
-    alert('Kutsu lähetetty!');
-    handleClosePopup();
+    try {
+      // Create finnkino data object
+      const finnkinoData = {
+        movie: selectedShow.title,
+        theatre: selectedShow.theatre,
+        showtime: selectedShow.start,
+        auditorium: selectedShow.auditorium || '',
+        date: dateInput,
+        area: areas.find(area => area.id === selectedArea)?.name || '',
+        invitationText: invitationText
+      };
+      
+      // Send to API
+      await finnkinoItemsAPI.addFinnkinoItem(selectedGroup, finnkinoData, userId);
+      
+      alert('Invitation sent successfully!');
+      handleClosePopup();
+    } catch (error) {
+      console.error('Error sending invitation:', error);
+      alert('Failed to send invitation: ' + error.message);
+    }
   };
 
   return (
     <div className="showtimes">
       <select onChange={handleAreaChange} defaultValue="">
-        <option value="" disabled>Valitse paikkakunta…</option>
+        <option value="" disabled>Select location…</option>
         {
           areas.map(area => {
             return <option key={area.id} value={area.id}>{area.name}</option>
@@ -217,7 +230,7 @@ export function Showtimes() {
 
       <input
         type="text"
-        placeholder="Hae elokuvan nimellä..."
+        placeholder="Search by movie name..."
         value={nameInput}
         onChange={handleNameChange}
       />
@@ -226,7 +239,7 @@ export function Showtimes() {
       <ul>
         {
           shows.length === 0 && selectedArea
-            ? <li>Ei näytöksiä valitulla päivällä.</li>
+            ? <li>No shows on selected date.</li>
             : shows
                 .filter(show => 
                   nameInput === '' || 
@@ -246,7 +259,7 @@ export function Showtimes() {
                       onClick={() => handleOpenPopup(show)} 
                       className="movie-popup-button"
                     >
-                      Näytä tiedot
+                      Show details
                     </button>
                   </li>
                 )
@@ -259,7 +272,7 @@ export function Showtimes() {
         <div className="popup-overlay" onClick={handleClosePopup}>
           <div className="popup-content" onClick={(e) => e.stopPropagation()}>
             <div className="popup-header">
-              <h2>Pyydä seuraa näytökseen</h2>
+              <h2>Invite friends to the show</h2>
               <button className="close-button" onClick={handleClosePopup}>
                 ×
               </button>
@@ -271,27 +284,27 @@ export function Showtimes() {
                     <img src={selectedShow.images} alt={selectedShow.title} />
                   </div>
                   <h3>{selectedShow.title}</h3>
-                  <p>Näytösaika: {fmtTime(selectedShow.start)}</p>
-                  <p>Teatteri: {selectedShow.theatre}</p>
+                  <p>Showtime: {fmtTime(selectedShow.start)}</p>
+                  <p>Theatre: {selectedShow.theatre}</p>
                   {selectedShow.auditorium && (
-                    <p>Sali: {selectedShow.auditorium}</p>
+                    <p>Auditorium: {selectedShow.auditorium}</p>
                   )}
-                  <p>Päivä: {dateInput}</p>
-                  <p>Alue: {selectedArea ? areas.find(area => area.id === selectedArea)?.name : 'Ei valittu'}</p>
+                  <p>Date: {dateInput}</p>
+                  <p>Area: {selectedArea ? areas.find(area => area.id === selectedArea)?.name : 'Not selected'}</p>
                 </>
               )}
               <div className="popup-text">
-                <h3>Valitse ryhmä ja kirjoita kutsuviesti</h3>
+                <h3>Select group and write invitation message</h3>
                 
                 <div className="group-selection">
-                  <label htmlFor="group-select">Valitse ryhmä:</label>
+                  <label htmlFor="group-select">Select group:</label>
                   <select 
                     id="group-select"
                     value={selectedGroup} 
                     onChange={handleGroupChange}
                     className="group-dropdown"
                   >
-                    <option value="">Valitse ryhmä...</option>
+                    <option value="">Choose group...</option>
                     {groups.map((group) => (
                       <option key={group.id} value={group.id}>
                         {group.name}
@@ -301,18 +314,18 @@ export function Showtimes() {
                 </div>
 
                 <div className="invitation-text">
-                  <label htmlFor="invitation-input">Kutsuviesti:</label>
+                  <label htmlFor="invitation-input">Invitation message:</label>
                   <input 
                     id="invitation-input"
                     type="text" 
-                    placeholder="Kirjoita tähän vapaavalintainen kutsu näytökseen..." 
+                    placeholder="Write an optional invitation message for the show..." 
                     value={invitationText}
                     onChange={handleInvitationChange}
                   />
                 </div>
 
                 <button className="popup-button" onClick={handleSendInvitation}>
-                  Lähetä kutsu
+                  Send invitation
                 </button>
               </div>
             </div>

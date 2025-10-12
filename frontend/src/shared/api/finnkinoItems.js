@@ -58,12 +58,13 @@ export const finnkinoItemsAPI = {
   },
 
   // Delete a Finnkino item
-  deleteItem: async (itemId) => {
+  deleteItem: async (itemId, userId) => {
     const response = await fetch(`${API}/group-finnkino-items/${itemId}`, {
       method: 'DELETE',
       headers: {
         'Content-Type': 'application/json'
-      }
+      },
+      body: JSON.stringify({ userId })
     });
     
     if (!response.ok) {

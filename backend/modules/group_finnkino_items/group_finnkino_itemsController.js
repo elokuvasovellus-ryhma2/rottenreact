@@ -66,14 +66,14 @@ export async function getGroupFinnkinoItems(req, res, next) {
 export async function deleteGroupFinnkinoItem(req, res, next) {
   try {
     const { itemId } = req.params;
-    const userId = req.user?.id;
+    const { userId } = req.body;
     
     if (!itemId) {
       return res.status(400).json({ error: "itemId is required" });
     }
     
     if (!userId) {
-      return res.status(401).json({ error: "Authentication required" });
+      return res.status(400).json({ error: "userId is required" });
     }
     
     const result = await deleteGroupFinnkinoItemModel(itemId, userId);

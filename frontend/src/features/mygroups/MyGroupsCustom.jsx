@@ -74,6 +74,15 @@ export function MyGroupsCustom() {
     }
   };
 
+  const deleteFinnkinoItem = async (itemId) => {
+    try {
+      await finnkinoItemsAPI.deleteItem(itemId, userId);
+      fetchFinnkinoItems();
+    } catch (error) {
+      console.error('Error deleting finnkino item:', error);
+    }
+  };
+
   return (
     <div style={{ color: "#255" }}>
       <h1>My Groups</h1>
@@ -209,6 +218,26 @@ export function MyGroupsCustom() {
                        <p>
                         <strong>From user:</strong> {item.added_by_email}
                       </p>
+
+                      <button 
+                        onClick={() => deleteFinnkinoItem(item.id)}
+                        style={{
+                          backgroundColor: '#ff4444',
+                          color: 'white',
+                          border: 'none',
+                          padding: '8px 16px',
+                          borderRadius: '4px',
+                          cursor: 'pointer',
+                          fontSize: '14px',
+                          fontWeight: '500',
+                          marginTop: '10px',
+                          transition: 'background-color 0.2s ease'
+                        }}
+                        onMouseOver={(e) => e.target.style.backgroundColor = '#cc3333'}
+                        onMouseOut={(e) => e.target.style.backgroundColor = '#ff4444'}
+                      >
+                        Remove this invite
+                      </button>
                     </div>
                   );
                 })}

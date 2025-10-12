@@ -1,26 +1,26 @@
 .delete-section {
-  background: #fff5f5;
-  border: 1px solid #fed7d7;
+  background: rgba(255,128,64,.1);
+  border: 1px solid rgba(255,128,64,.3);
   border-radius: 6px;
   padding: 1rem;
   margin-top: 1rem;
 }
 
 .delete-section h2 {
-  color: #c53030;
+  color: #FF8040;
   margin: 0 0 0.5rem 0;
   font-size: 1.1rem;
   font-weight: 600;
 }
 
 .delete-section p {
-  color: #666;
+  color: #001BB7;
   margin: 0 0 1rem 0;
   font-size: 0.9rem;
 }
 
 .delete-section button {
-  background: #e53e3e;
+  background: #FF8040;
   color: white;
   border: none;
   padding: 0.5rem 1rem;
@@ -31,9 +31,9 @@
 }
 
 .delete-section button:hover {
-  background: #c53030;
+  background: #0046FF;
 }
 
 .delete-section button:active {
-  background: #9c2626;
+  background: #001BB7;
 }

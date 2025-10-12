@@ -12,7 +12,7 @@ export function Navbar() {
     ...(isLoggedIn ? [
       { path: '/favorites', label: 'FAVORITES' },
       { path: '/groups', label: 'GROUPS' },
-      { path: '/mygroups', label: 'MY_GROUPS' }
+      { path: '/mygroups', label: 'MY GROUPS' }
     ] : []),
     { path: '/showtimes', label: 'SHOWTIMES' }
   ];

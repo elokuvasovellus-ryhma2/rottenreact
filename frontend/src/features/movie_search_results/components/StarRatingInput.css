@@ -9,13 +9,13 @@
   background: transparent;
   border: none;
   padding: 0;
-  color: #6b7280;              
+  color: #E9E9E9;              
   transition: transform .08s ease, color .2s ease;
 }
 
 
 .stars-input .sri-star.on {
-  color: #fbbf24;              
+  color: #FF8040;              
 }
 
 
@@ -26,6 +26,6 @@
 
 
 .stars-input .sri-star:focus-visible {
-  outline: 2px solid #3b82f6;
+  outline: 2px solid #0046FF;
   outline-offset: 2px;
 }

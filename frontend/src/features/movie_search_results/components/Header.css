@@ -1,16 +1,18 @@
 
 :root {
-  --background: #121212;
-  --text: #ffffff;
-  --border: rgba(255, 255, 255, 0.3);
+  --background: #E9E9E9;
+  --text: #001BB7;
+  --border: rgba(0, 27, 183, 0.3);
 }
 
 .header {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 0.5rem 1rem;
+  padding: var(--spacing-3) var(--spacing-4);
   background: var(--background);
+  max-width: 1100px;
+  margin: 0 auto;
 }
 
 .header-left {

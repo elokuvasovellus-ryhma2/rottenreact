@@ -1,8 +1,8 @@
 .movie-search-page {
-  max-width: 800px;
-  margin: 1rem auto;
-  padding: 0 1rem;
-  color: #222;           
+  max-width: 1100px;
+  margin: 0 auto;
+  padding: var(--spacing-4);
+  color: var(--color-text-primary);
 }
 
 .movie-search-page h2 {

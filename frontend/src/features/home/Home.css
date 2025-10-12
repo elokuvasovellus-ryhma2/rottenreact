@@ -1,24 +1,25 @@
-/* src/features/home/Home.css */
-:root { --container: 100%; }         /* tai poista koko muuttuja */
+/* Home Page Styles */
 .section {
-  max-width: none;                   /* poistetaan “kapea” rajoitus */
+  max-width: 1100px;
   width: 100%;
-  padding-inline: 40px;              /* sivupaddingit ettei liimaudu reunoihin */
-  margin-inline: 0;
+  padding: var(--spacing-4);
+  margin: 0 auto;
 }
 
-/* Sivun pääotsikko hakukentän yllä (jos haluat) */
+/* Page title above search field */
 .page-title {
-  font-size: 2rem;
-  font-weight: 800;
-  color: #fff;
-  margin: 24px 0 16px;
+  font-size: var(--font-size-4xl);
+  font-weight: var(--font-weight-extrabold);
+  color: var(--color-primary);
+  margin: var(--spacing-6) 0 var(--spacing-4);
+  font-family: var(--font-family-primary);
 }
 
-/* Otsikot “Right Now” ja “Latest reviews” */
+/* Section titles "Right Now" and "Latest reviews" */
 .section-title {
-  font-size: 1.5rem;
-  font-weight: 800;
-  color: #fff;
-  margin: 28px 0 12px;
+  font-size: var(--font-size-3xl);
+  font-weight: var(--font-weight-extrabold);
+  color: var(--color-primary);
+  margin: var(--spacing-8) 0 var(--spacing-3);
+  font-family: var(--font-family-primary);
 }

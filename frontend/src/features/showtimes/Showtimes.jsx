@@ -212,60 +212,87 @@ export function Showtimes() {
   };
 
   return (
-    <div className="showtimes">
-      <select onChange={handleAreaChange} defaultValue="">
-        <option value="" disabled>Select location…</option>
-        {
-          areas.map(area => {
-            return <option key={area.id} value={area.id}>{area.name}</option>
-          })
-        }
-      </select>
+    <div className="showtimes-page">
+      <h1>Movie Showtimes</h1>
+      
+      <div className="filters-section">
+        <div className="filter-group">
+          <label className="filter-label">Location:</label>
+          <select 
+            onChange={handleAreaChange} 
+            defaultValue=""
+            className="input"
+          >
+            <option value="" disabled>Select location…</option>
+            {
+              areas.map(area => {
+                return <option key={area.id} value={area.id}>{area.name}</option>
+              })
+            }
+          </select>
+        </div>
 
-      <input
-        type="date"
-        value={dateInput}
-        onChange={handleDateChange}
-      />
+        <div className="filter-group">
+          <label className="filter-label">Date:</label>
+          <input
+            type="date"
+            value={dateInput}
+            onChange={handleDateChange}
+            className="input"
+          />
+        </div>
 
-      <input
-        type="text"
-        placeholder="Search by movie name..."
-        value={nameInput}
-        onChange={handleNameChange}
-      />
+        <div className="filter-group">
+          <label className="filter-label">Movie:</label>
+          <input
+            type="text"
+            placeholder="Search by movie name..."
+            value={nameInput}
+            onChange={handleNameChange}
+            className="input"
+          />
+        </div>
+      </div>
 
 
-      <ul>
-        {
-          shows.length === 0 && selectedArea
-            ? <li>No shows on selected date.</li>
-            : shows
-                .filter(show => 
-                  nameInput === '' || 
-                  show.title.toLowerCase().includes(nameInput.toLowerCase())
-                )
-                .map(show => {
+      <div className="shows-section">
+        <h2>Available Shows</h2>
+        {shows.length === 0 && selectedArea ? (
+          <div className="no-shows">
+            <p>No shows on selected date.</p>
+          </div>
+        ) : (
+          <ul className="shows-list">
+            {shows
+              .filter(show => 
+                nameInput === '' || 
+                show.title.toLowerCase().includes(nameInput.toLowerCase())
+              )
+              .map(show => {
                 return (
-                  <li key={show.id}>
+                  <li key={show.id} className="show-item">
                     <img
-                    className="images"
-                    src={show.images}
+                      className="show-image"
+                      src={show.images}
+                      alt={show.title}
                     />
-                    <span>
-                      {fmtTime(show.start)} — {show.title} ({show.theatre}{show.auditorium ? `, ${show.auditorium}` : ''})
-                    </span>
+                    <div className="show-details">
+                      <span className="show-info">
+                        {fmtTime(show.start)} — {show.title} ({show.theatre}{show.auditorium ? `, ${show.auditorium}` : ''})
+                      </span>
+                    </div>
                     <button 
                       onClick={() => handleOpenPopup(show)} 
-                      className="movie-popup-button"
+                      className="btn btn-accent"
                     >
-                      Show details
+                      Show Details
                     </button>
                   </li>
                 )
-              })
-        }
-      </ul>
+              })}
+          </ul>
+        )}
+      </div>
 
       {/* Popup window */}
       {isPopupOpen && (

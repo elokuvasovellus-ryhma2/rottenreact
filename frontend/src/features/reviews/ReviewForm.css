@@ -1,49 +1,85 @@
-.review-form { margin: 1rem 0; }
+.review-form { 
+  margin: var(--spacing-4) 0; 
+}
 
-.rf-error { color: #ef4444; margin-bottom: .5rem; }
-.rf-ok    { color: #22c55e; margin-bottom: .5rem; }
+.rf-error { 
+  color: #ef4444; 
+  margin-bottom: var(--spacing-2);
+  font-family: var(--font-family-primary);
+  font-size: var(--font-size-sm);
+}
 
-.rf-grid { display: grid; gap: .75rem; max-width: 560px; }
+.rf-ok { 
+  color: #22c55e; 
+  margin-bottom: var(--spacing-2);
+  font-family: var(--font-family-primary);
+  font-size: var(--font-size-sm);
+}
 
-.rf-label { display: grid; gap: .35rem; color: #ddd; }
+.rf-grid { 
+  display: grid; 
+  gap: var(--spacing-3); 
+  max-width: 560px; 
+}
+
+.rf-label { 
+  display: grid; 
+  gap: var(--spacing-2); 
+  color: var(--color-text-primary);
+  font-family: var(--font-family-primary);
+}
 
 .rf-label input,
 .rf-label textarea {
   width: 100%;
-  border: 1px solid #2b2b2b;
-  background: #151515;
-  color: #f3f3f3;
-  border-radius: 8px;
-  padding: .6rem .75rem;
+  border: var(--border-width-1) solid var(--color-primary);
+  background: #ffffff;
+  color: var(--color-text-primary);
+  border-radius: var(--radius-md);
+  padding: var(--spacing-3) var(--spacing-4);
+  font-family: var(--font-family-primary);
+  font-size: var(--font-size-base);
+  transition: all 0.2s ease;
 }
 
 .rf-label input::placeholder,
-.rf-label textarea::placeholder { color: #8a8a8a; }
+.rf-label textarea::placeholder { 
+  color: var(--color-text-secondary);
+}
 
 .rf-label input:focus,
 .rf-label textarea:focus {
   outline: none;
-  border-color: #3b82f6;
-  box-shadow: 0 0 0 3px rgba(59, 130, 246, .25);
+  border-color: var(--color-secondary);
+  box-shadow: 0 0 0 3px rgba(0, 70, 255, 0.25);
 }
 
 .rf-btn {
-  background: #0ea5e9;
-  color: #0b0b0b;
-  font-weight: 600;
+  background: var(--color-primary);
+  color: #ffffff;
+  font-weight: var(--font-weight-semibold);
+  font-family: var(--font-family-primary);
+  font-size: var(--font-size-base);
   border: none;
-  border-radius: 10px;
-  padding: .6rem 1rem;
+  border-radius: var(--radius-lg);
+  padding: var(--spacing-3) var(--spacing-4);
   cursor: pointer;
   width: fit-content;
+  transition: all 0.2s ease;
 }
 
-.rf-btn[disabled] { opacity: .6; cursor: not-allowed; }
+.rf-btn:hover {
+  background: var(--color-secondary);
+}
 
+.rf-btn[disabled] { 
+  opacity: 0.6; 
+  cursor: not-allowed; 
+}
 
 .rf-btn:focus-visible,
 .rf-label input:focus-visible,
 .rf-label textarea:focus-visible {
-  outline: 2px solid #3b82f6;
+  outline: 2px solid var(--color-secondary);
   outline-offset: 2px;
 }

@@ -5,7 +5,7 @@
 .theatres-row h2 {
   font-size: 1.7rem;
   font-weight: 700;
-  color: #fff;
+  color: #001BB7;
   margin: 0 0 10px;
 }
 
@@ -23,12 +23,13 @@
 .theatre-card {
   flex: 0 0 auto;
   width: 180px;
-  background: #1a1a1a;
+  background: rgba(255,255,255,.9);
+  border: 1px solid rgba(0,27,183,.2);
   border-radius: 12px;
   padding: 10px;
-  color: #fff;
+  color: #001BB7;
   text-align: center;
-  box-shadow: 0 2px 10px rgba(0,0,0,.35);
+  box-shadow: 0 2px 10px rgba(0,27,183,.15);
 }
 
 
@@ -57,13 +58,13 @@
 
 .meta {
   font-size: .9rem;
-  color: #d1d5db;
+  color: #0046FF;
   display: grid;
   gap: 2px;
 }
 .meta .time {
   font-weight: 700;
-  color: #f5f5f5;
+  color: #001BB7;
 }
 
 
@@ -83,7 +84,7 @@
 
 .skeleton-ph {
   border-radius: 8px;
-  background: #252525;
+  background: #E9E9E9;
   position: relative;
   overflow: hidden;
 }

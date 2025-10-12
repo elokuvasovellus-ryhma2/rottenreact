@@ -2,18 +2,18 @@
 
 .lrw__header {
   display: flex; align-items: center; justify-content: space-between;
-  margin-bottom: .75rem; border-bottom: 1px solid #2b2b2b; padding-bottom: .5rem;
+  margin-bottom: .75rem; border-bottom: 1px solid rgba(0,27,183,.3); padding-bottom: .5rem;
 }
-.lrw h2 { margin: 0; font-size: 1.7rem; font-weight: 700; }
+.lrw h2 { margin: 0; font-size: 1.7rem; font-weight: 700; color: #001BB7; }
 
 .lrw__nav { display: flex; gap: .5rem; }
 .lrw__btn {
-  border: 1px solid #2b2b2b; background:#131313; color:#eee;
+  border: 1px solid rgba(0,27,183,.3); background:#ffffff; color:#001BB7;
   width: 36px; height: 36px; border-radius: 8px; cursor: pointer;
 }
-.lrw__btn:hover { background:#1a1a1a; }
+.lrw__btn:hover { background:#FF8040; color: #ffffff; }
 
-.lrw__status { margin:.5rem 0; color:#bbb; }
+.lrw__status { margin:.5rem 0; color:#0046FF; }
 .lrw__status--err { color:#ef4444; }
 .lrw__scroller {
  display: flex;

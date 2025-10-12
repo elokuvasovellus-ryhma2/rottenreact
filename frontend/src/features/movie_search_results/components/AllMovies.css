@@ -1,13 +1,13 @@
 body {
   margin: 0;
-  background-color: #121212;
-  color: white;
-  font-family: Arial, sans-serif;
+  background-color: var(--color-background);
+  color: var(--color-text-primary);
+  font-family: var(--font-family-primary);
 }
 
 .container-fluid {
-  padding: 0 20px;
-  max-width: 1400px;
+  padding: var(--spacing-4);
+  max-width: 1100px;
   margin: 0 auto;
 }
 
@@ -24,10 +24,10 @@ body {
 .filter-section button {
   padding: 10px;
   border-radius: 5px;
-  border: none;
+  border: 1px solid rgba(0,27,183,.3);
   font-size: 1rem;
-  background-color: #1e1e1e;
-  color: white;
+  background-color: #ffffff;
+  color: #001BB7;
 }
 
 
@@ -40,7 +40,8 @@ body {
 
 
 .movie-card {
-  background-color: #1e1e1e;
+  background-color: #ffffff;
+  border: 1px solid rgba(0,27,183,.2);
   border-radius: 8px;
   overflow: hidden;
   cursor: pointer;
@@ -50,7 +51,7 @@ body {
 
 .movie-card:hover {
   transform: scale(1.03);
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+  box-shadow: 0 4px 12px rgba(0, 27, 183, 0.3);
 }
 
 .movie-card img {
@@ -62,18 +63,18 @@ body {
 .movie-card .card-title {
   margin: 0.5rem 0;
   font-size: 0.9rem;
-  color: #fff;
+  color: #001BB7;
 }
 
 
 .no-image {
   width: 100%;
   height: 270px;
-  background: #333;
+  background: #E9E9E9;
   display: flex;
   align-items: center;
   justify-content: center;
-  color: #aaa;
+  color: #0046FF;
   font-size: 0.9rem;
 }
 
@@ -88,7 +89,7 @@ body {
 
 .pagination button {
   padding: 10px 20px;
-  background-color: #ff3c78;
+  background-color: #FF8040;
   color: white;
   border: none;
   border-radius: 5px;
@@ -96,7 +97,7 @@ body {
 }
 
 .pagination button:disabled {
-  background-color: rgba(255, 60, 120, 0.5);
+  background-color: rgba(255, 128, 64, 0.5);
   cursor: default;
 }
 

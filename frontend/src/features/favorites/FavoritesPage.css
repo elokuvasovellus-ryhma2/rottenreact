@@ -1,38 +1,38 @@
 main.main-content {
   margin: 0;
   padding: 0;
-  background-color: #000;  
+  background-color: #E9E9E9;  
 }
 
 
 .favorites-page {
   display: flex;
-  gap: 28px;
-  padding: 32px;
-  padding-top: 50px;
+  gap: var(--spacing-8);
+  padding: var(--spacing-4);
   min-height: 100vh;
-  font-family: system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
-
-  background: radial-gradient(1200px 800px at 20% -10%, #030303 0%, #020202 45%, #06080f 100%);
-  color: #e5e7eb;
+  font-family: var(--font-family-primary);
+  background: linear-gradient(135deg, #E9E9E9 0%, #f0f0f0 100%);
+  color: var(--color-primary);
+  max-width: 1200px;
+  margin: 0 auto;
 }
 
 /* Paneelit */
 .left-panel,
 .right-panel {
   flex: 1 1 0;
-  background: rgba(255, 255, 255, 0.06);
-  border: 1px solid rgba(255, 255, 255, 0.1);
+  background: rgba(255, 255, 255, 0.8);
+  border: 1px solid rgba(0, 27, 183, 0.2);
   border-radius: 14px;
   padding: 20px;
-  box-shadow: 0 10px 30px rgba(0,0,0,.35);
+  box-shadow: 0 10px 30px rgba(0,27,183,.15);
   backdrop-filter: blur(6px);
 }
 .left-panel { max-width: 420px; }
 .right-panel { min-width: 0; }
 
 .left-panel h2, .right-panel h2, .left-panel h3 {
-  color: #fff;
+  color: #001BB7;
   margin: 0 0 12px;
   letter-spacing: .2px;
 }
@@ -43,12 +43,12 @@ main.main-content {
   height: 42px;
   padding: 0 12px;
   border-radius: 10px;
-  border: 1px solid rgba(255,255,255,.2);
-  background: rgba(255,255,255,.08);
-  color: #fff;
+  border: 1px solid rgba(0,27,183,.3);
+  background: rgba(255,255,255,.9);
+  color: #001BB7;
   outline: none;
 }
-.left-panel input[type="text"]::placeholder { color: #9ca3af; }
+.left-panel input[type="text"]::placeholder { color: #0046FF; }
 
 .left-panel button {
   height: 38px;
@@ -57,9 +57,9 @@ main.main-content {
   border-radius: 10px;
   font-weight: 600;
   cursor: pointer;
-  background: #22d3ee;
-  color: #0b1022;
-  box-shadow: 0 6px 18px rgba(34,211,238,.25);
+  background: #FF8040;
+  color: #ffffff;
+  box-shadow: 0 6px 18px rgba(255,128,64,.25);
   transition: transform .05s ease, filter .2s ease;
   margin-right: 8px;
   margin-top: 10px;
@@ -80,17 +80,17 @@ main.main-content {
   font-size: 0.9rem;
   font-weight: 500;
   cursor: pointer;
-  border: 1px solid rgba(255,255,255,.2);
-  background: rgba(255,255,255,.06);
-  color: #e5e7eb;
+  border: 1px solid rgba(0,27,183,.3);
+  background: rgba(255,255,255,.6);
+  color: #001BB7;
   transition: all .2s ease;
 }
-.list-tag:hover { background: rgba(255,255,255,.12); }
+.list-tag:hover { background: rgba(0,70,255,.1); }
 .list-tag.active {
-  background: #22d3ee;
-  color: #0b1022;
-  border-color: #22d3ee;
-  box-shadow: 0 4px 12px rgba(34,211,238,.35);
+  background: #FF8040;
+  color: #ffffff;
+  border-color: #FF8040;
+  box-shadow: 0 4px 12px rgba(255,128,64,.35);
 }
 
 /* Oikea paneeli */
@@ -107,16 +107,16 @@ main.main-content {
 .movie-card {
   display: flex;
   flex-direction: column;
-  background: rgba(255,255,255,.06);
-  border: 1px solid rgba(255,255,255,.12);
+  background: rgba(255,255,255,.8);
+  border: 1px solid rgba(0,27,183,.2);
   border-radius: 12px;
   overflow: hidden;
   transition: transform .12s ease, box-shadow .2s ease, border-color .2s ease;
 }
 .movie-card:hover {
   transform: translateY(-2px);
-  border-color: rgba(34,211,238,.45);
-  box-shadow: 0 14px 28px rgba(0,0,0,.35);
+  border-color: rgba(255,128,64,.45);
+  box-shadow: 0 14px 28px rgba(0,27,183,.15);
 }
 
 /* Juliste */
@@ -133,20 +133,20 @@ main.main-content {
 /* Meta */
 .meta { padding: 10px 12px 12px; }
 .title { margin: 0 0 4px; font-size: 1rem; line-height: 1.2; }
-.title a { color: #fff; text-decoration: none; }
+.title a { color: #001BB7; text-decoration: none; }
 .title a:hover { text-decoration: underline; }
-.sub { color: #a1a1aa; font-size: 0.86rem; margin-bottom: 6px; }
+.sub { color: #0046FF; font-size: 0.86rem; margin-bottom: 6px; }
 
 /* Näytä koko synopsis */
 .overview {
-  color: #c9c9cf;
+  color: #0046FF;
   font-size: 0.9rem;
   line-height: 1.4;
   margin-top: 4px;
 }
 
 /* Tyhjä/tilaviestit */
-.right-panel p, .left-panel p { color: #cbd5e1; }
+.right-panel p, .left-panel p { color: #001BB7; }
 
 /* Responsiivisuus */
 @media (max-width: 1024px) {

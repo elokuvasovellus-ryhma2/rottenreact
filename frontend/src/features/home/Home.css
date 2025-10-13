@@ -1,13 +1,12 @@
-/* src/features/home/Home.css */
-:root { --container: 100%; }         /* tai poista koko muuttuja */
+
 .section {
-  max-width: none;                   /* poistetaan “kapea” rajoitus */
+  max-width: none;
   width: 100%;
-  padding-inline: 40px;              /* sivupaddingit ettei liimaudu reunoihin */
+  padding-inline: 40px;
   margin-inline: 0;
+  padding-top: var(--navbar-height); /* väistä navbar */
 }
 
-/* Sivun pääotsikko hakukentän yllä (jos haluat) */
 .page-title {
   font-size: 2rem;
   font-weight: 800;
@@ -15,10 +14,22 @@
   margin: 24px 0 16px;
 }
 
-/* Otsikot “Right Now” ja “Latest reviews” */
 .section-title {
   font-size: 1.5rem;
   font-weight: 800;
   color: #fff;
   margin: 28px 0 12px;
+}
+
+/* 📱 Mobiili */
+@media (max-width: 640px) {
+  .section {
+    padding-inline: 16px;
+    padding-top: calc(var(--navbar-height) + 8px);
+  }
+
+  .page-title {
+    font-size: 1.5rem;
+    margin-top: 12px;
+  }
 }

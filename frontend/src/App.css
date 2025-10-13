@@ -1,37 +1,61 @@
-/* 1) Sivujen yhteinen kanvaasi */
-.main-content {
-  /* yhtenäinen tumma teema kaikkialla */
-  background: #000;
-  color: #e5e7eb;
-
-  /* estää margin collapse -ilmiön */
-  display: flow-root;         /* moderni ja siisti tapa */
-  /* vaihtoehtoisesti: overflow:auto; tai border-top:1px solid transparent; */
-
-  /* globaali tilananto: ei enää teksti kiinni navissa */
-  padding: 24px 24px 40px;    /* top, sides, bottom */
-  min-height: 100vh;
+:root {
+  --navbar-height: 100px; /* muuta 70px jos navbar on pienempi */
 }
 
-/* 2) Yhtenäinen pystyrytmi: jokaisen suoran lapsen väliin tilaa */
+.app {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+  background-color: #000; /* tausta koko sivulle */
+  color: #e5e7eb;
+}
+
+/* Sivujen yhteinen sisältöalue */
+.main-content {
+  flex: 1;
+  display: flow-root; /* estää margin collapse -ilmiön */
+  padding: calc(var(--navbar-height) + 16px) 24px 40px; /* yläpadding ottaa navin huomioon */
+}
+
+/* Typografinen rytmi ja marginit */
 .main-content > * + * {
   margin-top: 24px;
 }
 
-/* 3) Varmistus: estä ensimmäisen lapsen ylä-margini (margin collapse) */
+/* Estä ylimääräiset marginit */
 .main-content > * {
   margin-block-start: 0;
 }
 
-/* 4) (Valinnainen mutta suositeltava) typografian oletusmarginit pois
-   – väli hallitaan nyt rytmisäännöllä yllä */
+/* Typografian oletusmarginit pois */
 h1, h2, h3, h4, h5, h6,
 p, ul, ol, section, article {
   margin-block: 0;
 }
 
-/* 5) (Valinnainen) Yhtenäinen sivuleveys-kontti sivuja varten */
+/* Yhtenäinen sivuleveys */
 .container {
   max-width: 1200px;
   margin-inline: auto;
+  width: 100%;
+}
+
+/* Vastaa eri näyttöjä */
+@media (max-width: 1024px) {
+  .main-content {
+    padding-left: 16px;
+    padding-right: 16px;
+  }
+}
+
+@media (max-width: 640px) {
+  .main-content {
+    padding-top: calc(var(--navbar-height) + 8px);
+    padding-left: 12px;
+    padding-right: 12px;
+  }
+
+  .container {
+    max-width: 100%;
+  }
 }

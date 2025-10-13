@@ -1,99 +1,191 @@
+/* Yläpalkki */
+
+:root {
+  --navbar-height: 100px;
+}
+
 .navbar {
-  background-color: #0BA6DF;
-  padding: 1rem 0;
-  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: var(--navbar-height);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background: #111;
+  z-index: 1200;
 }
 
 .navbar-container {
   max-width: 1200px;
   margin: 0 auto;
+  padding: 10px 20px;
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 0 2rem;
+  gap: 16px;
 }
 
-.navbar-brand a {
-  color: #EBEBEB;
+/* Logo */
+.logo a {
+  color: #fff;
+  font-weight: 700;
   text-decoration: none;
-  font-size: 1.5rem;
-  font-weight: bold;
+  letter-spacing: 0.2px;
 }
 
-.navbar-nav {
+/* Linkit desktopissa */
+.nav-links {
   display: flex;
+  gap: 12px;
   list-style: none;
   margin: 0;
   padding: 0;
-  gap: 2rem;
+  align-items: center;
 }
 
-.nav-item {
-  margin: 0;
-}
-
-.nav-link {
-  color: #EBEBEB;
+.nav-links li a {
+  color: #eaeaea;
   text-decoration: none;
-  padding: 0.5rem 1rem;
-  border-radius: 4px;
-  transition: background-color 0.3s ease;
+  padding: 8px 12px;
+  border-radius: 6px;
+  transition: background 0.25s ease, color 0.25s ease;
 }
 
-.nav-link:hover {
-  background-color: #FAA533;
+.nav-links li a:hover,
+.nav-links li a.active {
+  background: #232323;
+  color: #fff;
 }
 
-.nav-link.active {
-  background-color: #EF7722;
-  color: white;
-}
-
+/* Auth desktop */
 .navbar-auth {
-  margin-left: 2rem;
   display: flex;
   align-items: center;
-  gap: 1rem;
+  gap: 12px;
 }
 
-.auth-toggle-btn {
-  background-color: #EF7722;
-  color: white;
+.logout {
+  background: #ff3c78;
   border: none;
-  padding: 0.5rem 1rem;
-  border-radius: 4px;
-  font-weight: bold;
+  color: #fff;
+  padding: 8px 12px;
+  border-radius: 6px;
+  font-weight: 600;
   cursor: pointer;
-  transition: background-color 0.3s ease;
+  transition: background 0.25s ease;
 }
 
-.auth-toggle-btn:hover {
-  background-color: #FAA533;
+.logout:hover {
+  background: #e63268;
 }
 
 .profile-btn {
-  background-color: #4122ef;
-  color: white;
-  text-decoration: none;
-  padding: 0.5rem;
-  border-radius: 50px;
-  font-weight: bold;
-  transition: background-color 0.3s ease;
+  background: #4122ef;
+  color: #fff;
+  width: 34px;
+  height: 34px;
+  border-radius: 50%;
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  width: 40px;
-  height: 40px;
+  text-decoration: none;
+  transition: background 0.25s ease;
 }
 
 .profile-btn:hover {
-  background-color: #FAA533;
+  background: #2f1ad1;
 }
 
-
-.main-content {
-  min-height: calc(100vh - 120px);
-  padding: 2rem 0;
-  width: 100%;
-  flex: 1;
+/* Hamburger */
+.hamburger {
+  display: none;
+  font-size: 1.8rem;
+  background: none;
+  border: none;
+  color: #fff;
+  cursor: pointer;
 }
+
+/* 📱 Mobiili */
+@media (max-width: 900px) {
+  .hamburger {
+    display: block;
+    margin-left: auto;
+  }
+
+  .nav-links {
+    display: none; /* desktop-linkit piiloon */
+  }
+
+  .nav-links.drawer {
+    display: flex;
+    position: fixed;
+    top: 0;
+    right: -280px;
+    height: 100%;
+    width: 260px;
+    background: #1a1a1a;
+    flex-direction: column;
+    align-items: flex-start;
+    padding: 70px 20px 20px;
+    gap: 10px;
+    box-shadow: -12px 0 24px rgba(0,0,0,0.35);
+    transition: right 0.3s ease;
+    z-index: 1250;
+  }
+
+  .nav-links.drawer.open {
+    right: 0;
+  }
+
+  .nav-links.drawer li a {
+    display: block;
+    width: 100%;
+    padding: 10px 12px;
+    border-radius: 8px;
+  }
+
+  .auth-mobile {
+    margin-top: auto;
+    width: 100%;
+    display: flex;
+    gap: 10px;
+  }
+
+  .navbar-auth {
+    display: none; /* desktop-auth piiloon mobiilissa */
+  }
+
+  .overlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(0,0,0,0.55);
+    z-index: 1200;
+  }
+}
+
+@media (min-width: 901px) {
+  .auth-mobile {
+    display: none;
+  }
+}
+
+@media (min-width: 901px) {
+  .auth-mobile {
+    display: none;
+  }
+
+  .nav-links.drawer {
+    display: none; /* drawer piiloon desktopissa */
+  }
+}
+
+/* Logo-kuva */
+.logo-img {
+  max-height: 70px;   /* sopii navin korkeuteen */
+  width: auto;        /* pitää mittasuhteet */
+  display: block;     /* poistaa ylimääräisen rivivälin */
+}
+

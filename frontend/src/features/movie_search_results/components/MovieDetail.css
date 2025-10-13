@@ -1,6 +1,10 @@
+:root {
+  --navbar-height: 100px; /* varmista, että tämä on määritelty globaalisti */
+}
+
 .movie-detail {
   max-width: 1000px;
-  margin: 20px auto;
+  margin: calc(var(--navbar-height) + 20px) auto 20px auto; /* yläpaddiksi navin korkeus + 20px */
   padding: 20px;
   background: rgba(0,0,0,0.55);
   border-radius: 10px;
@@ -8,9 +12,7 @@
   color: #fff;
 }
 
-
 .movie-detail > * + * { margin-top: 18px; }
-
 
 .movie-header {
   display: flex;
@@ -19,13 +21,15 @@
 }
 
 .poster-wrap { flex-shrink: 0; }
+
 .movie-poster {
-  width: 190px;              
+  width: 190px;
   height: auto;
   border-radius: 8px;
   box-shadow: 0 6px 16px rgba(0,0,0,0.5);
   display: block;
 }
+
 .poster-ph {
   width: 300px;
   aspect-ratio: 2/3;
@@ -41,13 +45,13 @@
   font-weight: 700;
 }
 
-
 .movie-meta {
   display: flex;
   flex-wrap: wrap;
   gap: 8px;
   margin: 4px 0 12px;
 }
+
 .badge {
   background: rgba(255,255,255,.08);
   border: 1px solid rgba(255,255,255,.12);
@@ -71,6 +75,44 @@
   font-weight: 700;
 }
 
-
 .review-form { margin-top: 8px; }
 
+/* 📱 Mobiili: max 480px */
+@media (max-width: 480px) {
+  .movie-detail {
+    margin: calc(var(--navbar-height) + 16px) 12px 16px 12px;
+    padding: 16px;
+  }
+
+  .movie-header {
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+  }
+
+  .movie-poster {
+    width: 70%;
+    max-width: 260px;
+  }
+
+  .movie-title { font-size: 22px; }
+  .section-title { font-size: 18px; }
+  .movie-meta { justify-content: center; }
+}
+
+/* 📲 Tabletti: 481px–1024px */
+@media (min-width: 481px) and (max-width: 1024px) {
+  .movie-detail {
+    margin: calc(var(--navbar-height) + 18px) 16px 18px 16px;
+    padding: 18px;
+  }
+
+  .movie-header {
+    flex-direction: row;
+    align-items: flex-start;
+  }
+
+  .movie-poster { width: 160px; }
+  .movie-title { font-size: 24px; }
+  .section-title { font-size: 20px; }
+}

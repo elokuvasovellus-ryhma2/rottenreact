@@ -11,13 +11,29 @@ export default function MovieDetail() {
   const [loading, setLoading] = useState(true);
   const token = import.meta.env.VITE_TMDB_TOKEN;
 
-  // --- user id sessionStoragesta ---
+ 
   const getUser = () => {
     const userStr = sessionStorage.getItem("user");
     return userStr ? JSON.parse(userStr) : null;
   };
   const user = getUser();
   const userId = user?.id;
+
+  
+  const [providers, setProviders] = useState(null);
+  const [provLoading, setProvLoading] = useState(true);
+  const [provErr, setProvErr] = useState("");
+
+  
+  const region = React.useMemo(() => {
+    try {
+      const lang = navigator.language || "fi-FI";
+      const parts = String(lang).split("-");
+      return (parts[1] || "FI").toUpperCase();
+    } catch {
+      return "FI";
+    }
+  }, []);
 
   useEffect(() => {
     if (!id) {
@@ -41,14 +57,75 @@ export default function MovieDetail() {
     })();
   }, [id, token]);
 
+  
+  useEffect(() => {
+    if (!id) {
+      setProviders(null);
+      setProvLoading(false);
+      return;
+    }
+    let ignore = false;
+    setProvLoading(true);
+    setProvErr("");
+
+    (async () => {
+      try {
+        const res = await fetch(
+          `https://api.themoviedb.org/3/movie/${id}/watch/providers`,
+          { headers: { Authorization: `Bearer ${token}`, accept: "application/json" } }
+        );
+        if (!res.ok) throw new Error(`providers status ${res.status}`);
+        const data = await res.json();
+        const r = data?.results?.[region] || null;
+
+        const shaped = {
+          region,
+          link: r?.link || null,
+          flatrate: r?.flatrate || [],
+          rent: r?.rent || [],
+          buy: r?.buy || [],
+          free: r?.free || [],
+          ads: r?.ads || [],
+        };
+        if (!ignore) setProviders(shaped);
+      } catch (e) {
+        if (!ignore) {
+          console.error("Watch providers error:", e);
+          setProvErr("Watch providers unavailable");
+          setProviders(null);
+        }
+      } finally {
+        if (!ignore) setProvLoading(false);
+      }
+    })();
+
+    return () => { ignore = true; };
+  }, [id, token, region]);
+
   if (loading) return <p>Loading...</p>;
   if (!movie) return <p>Movie not found</p>;
 
   const { title, poster_path, release_date, overview, vote_average } = movie;
 
+  
+  const logoUrl = (path, w = 45) => (path ? `https://image.tmdb.org/t/p/w${w}${path}` : "");
+
+  
+  const providerGroups = [
+    { key: "flatrate", label: "Streaming" },
+    { key: "rent",     label: "Rent" },
+    { key: "buy",      label: "Buy" },
+    { key: "free",     label: "Free" },
+    { key: "ads",      label: "With ads" },
+  ];
+
+  const hasAnyProviders = providers
+    ? providerGroups.some(g => (providers[g.key] || []).length)
+    : false;
+
   return (
     <div className="movie-detail">
-      {/* Yläosa: juliste + tiedot vierekkäin */}
+      {}
       <div className="movie-header">
         <div className="poster-wrap">
           {poster_path ? (
@@ -80,6 +157,51 @@ export default function MovieDetail() {
           ) : (
             <p className="movie-overview">No description available.</p>
           )}
+
+          {}
+          <section className="watch-providers">
+            <h2 className="section-title">Where to watch</h2>
+
+            {provLoading && <p className="providers-loading">Loading providers…</p>}
+            {!provLoading && provErr && (
+              <p className="providers-error">{provErr}</p>
+            )}
+            {!provLoading && !provErr && providers && (
+              <>
+                {!hasAnyProviders ? (
+                  <p className="providers-empty">No providers in {providers.region}.</p>
+                ) : (
+                  providerGroups.map(({ key, label }) => {
+                    const arr = providers[key] || [];
+                    if (!arr.length) return null;
+                    return (
+                      <div className="wp-row" key={key}>
+                        <span className="wp-label">{label}</span>
+                        <div className="wp-logos">
+                          {arr.map(p => (
+                            <a
+                              key={p.provider_id}
+                              className="wp-chip"
+                              href={providers.link || "#"}
+                              target="_blank"
+                              rel="noreferrer"
+                              title={p.provider_name}
+                            >
+                              <img
+                                src={logoUrl(p.logo_path, 45)}
+                                alt={p.provider_name}
+                                loading="lazy"
+                              />
+                            </a>
+                          ))}
+                        </div>
+                      </div>
+                    );
+                  })
+                )}
+              </>
+            )}
+          </section>
 
           <div className="actions">
             <AddToFavoritesButton userId={userId} movieId={id} />

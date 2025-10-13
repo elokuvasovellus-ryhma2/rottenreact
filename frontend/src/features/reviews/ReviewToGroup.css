@@ -218,3 +218,19 @@
     width: 100%;
   }
 }
+
+
+a.action-btn { display: inline-block; text-decoration: none; }
+
+.modal-subheader {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  margin: 0 0 10px;
+}
+.modal-subheader .modal-subtitle { margin: 0; }
+.action-btn.small { padding: 8px 12px; font-size: 0.9rem; }
+
+a.action-btn { display: inline-block; text-decoration: none; }
+

@@ -5,9 +5,7 @@ export function Layout({ children }) {
   return (
     <div className="app">
       <Navbar />
-      <main className="main-content">
-        {children}
-      </main>
+      <main className="main-content">{children}</main>
       <Footer />
     </div>
   );

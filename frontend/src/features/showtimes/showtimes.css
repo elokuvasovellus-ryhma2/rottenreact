@@ -1,16 +1,29 @@
+:root {
+  --navbar-height: 100px;
+}
+
+.showtimes {
+  padding-top: calc(var(--navbar-height) + 16px);
+  max-width: 800px;
+  margin: 0 auto;
+  padding-left: 24px;
+  padding-right: 24px;
+  color: #0BA6DF;
+  font-family: 'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif;
+}
+
 .showtimes li {
   display: flex;
-  align-items: center;
+  align-items: flex-start;
   gap: 10px;
   margin-bottom: 20px;
   padding: 10px;
   border: 1px solid #eee;
   border-radius: 5px;
   background-color: #f9f9f9;
-
-  color: #0BA6DF; 
+  color: #0BA6DF;
   font-size: 20px;
-  font-family:'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif
+  font-family: 'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif;
 }
 
 .showtimes li span {
@@ -215,4 +228,35 @@
   outline: none;
   border-color: #0BA6DF;
   box-shadow: 0 0 5px rgba(11, 166, 223, 0.3);
+}
+
+/* Responsiivisuus */
+@media (max-width: 480px) {
+  .showtimes {
+    padding-left: 12px;
+    padding-right: 12px;
+  }
+
+  .showtimes li {
+    font-size: 16px;
+    flex-direction: column;
+    gap: 6px;
+  }
+}
+
+@media (min-width: 481px) and (max-width: 1024px) {
+  .showtimes {
+    padding-left: 16px;
+    padding-right: 16px;
+  }
+
+  .showtimes li {
+    font-size: 18px;
+  }
+}
+
+@media (min-width: 1025px) {
+  .showtimes li {
+    font-size: 20px;
+  }
 }

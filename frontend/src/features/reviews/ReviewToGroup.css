@@ -218,3 +218,40 @@
     width: 100%;
   }
 }
+
+
+a.action-btn { display: inline-block; text-decoration: none; }
+
+.modal-subheader {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  margin: 0 0 10px;
+}
+.modal-subheader .modal-subtitle { margin: 0; }
+.action-btn.small { padding: 8px 12px; font-size: 0.9rem; }
+
+a.action-btn { display: inline-block; text-decoration: none; }
+
+/* 📱 Mobiili */
+@media (max-width: 480px) {
+  .reviews-page {
+    padding: calc(var(--navbar-height) + 12px) 12px 12px 12px;
+  }
+
+  .grid {
+    grid-template-columns: 1fr; /* yksi kortti per rivi mobiilissa */
+  }
+}
+
+/* 📲 Tabletti */
+@media (min-width: 481px) and (max-width: 1024px) {
+  .reviews-page {
+    padding: calc(var(--navbar-height) + 14px) 16px 16px 16px;
+  }
+
+  .grid {
+    grid-template-columns: repeat(auto-fill, minmax(180px, 1fr)); /* pienempiä kortteja useampi per rivi */
+  }
+}

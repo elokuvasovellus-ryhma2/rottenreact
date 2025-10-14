@@ -1,8 +1,8 @@
 .movie-search-page {
   max-width: 800px;
-  margin: 1rem auto;
-  padding: 0 1rem;
-  color: #222;           
+  margin: 0 auto;
+  padding: calc(var(--navbar-height) + 16px) 1rem 1rem 1rem; /* yläpaddiksi navin korkeus + 16px */
+  color: #222;
 }
 
 .movie-search-page h2 {
@@ -44,4 +44,37 @@
   justify-content: center;
   color: #666;
   font-size: 0.9rem;
+}
+
+/* 📱 Mobiili */
+@media (max-width: 480px) {
+  .movie-search-page {
+    padding: calc(var(--navbar-height) + 12px) 12px 12px 12px;
+  }
+
+  .results-grid {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 0.75rem;
+  }
+
+  .movie-card img,
+  .no-poster {
+    height: 140px;
+  }
+}
+
+/* 📲 Tabletti */
+@media (min-width: 481px) and (max-width: 1024px) {
+  .movie-search-page {
+    padding: calc(var(--navbar-height) + 14px) 16px 16px 16px;
+  }
+
+  .results-grid {
+    grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+  }
+
+  .movie-card img,
+  .no-poster {
+    height: 160px;
+  }
 }

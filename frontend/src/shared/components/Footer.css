@@ -1,5 +1,9 @@
+:root {
+  --navbar-height: 100px;
+}
+
 .footer {
-  background-color: #0BA6DF;
+  background-color: #111; /* tumma tausta, erottuu navista */
   color: #EBEBEB;
   padding: 2rem 0;
   margin-top: auto;

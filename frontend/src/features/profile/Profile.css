@@ -1,5 +1,5 @@
 .profile-page {
-  padding: 2rem;
+  padding: calc(var(--navbar-height) + 16px) 2rem 2rem 2rem; /* yläpaddiksi navin korkeus + 16px */
   max-width: 600px;
   margin: 0 auto;
 }
@@ -51,23 +51,43 @@
   color: #333;
 }
 
-.group-upper {
-  display: flex;
-  gap: 1rem;
-  margin-bottom: 1rem;
-}
-
+.group-upper,
 .group-lower {
   display: flex;
   gap: 1rem;
   margin-bottom: 1rem;
+  flex-wrap: wrap; /* rivittäminen pienemmillä näytöillä */
 }
 
 .group-upper > *,
 .group-lower > * {
-  flex: 1;
+  flex: 1 1 45%; /* skaalautuvuus */
   border-radius: 8px;
   border: 1px solid #e0e0e0;
   padding: 1rem;
   background: #f8f9fa;
+}
+
+/* 📱 Mobiili */
+@media (max-width: 480px) {
+  .profile-page {
+    padding: calc(var(--navbar-height) + 12px) 12px 12px 12px;
+  }
+
+  .group-upper > *,
+  .group-lower > * {
+    flex: 1 1 100%;
+  }
+}
+
+/* 📲 Tabletti */
+@media (min-width: 481px) and (max-width: 1024px) {
+  .profile-page {
+    padding: calc(var(--navbar-height) + 14px) 16px 16px 16px;
+  }
+
+  .group-upper > *,
+  .group-lower > * {
+    flex: 1 1 48%;
+  }
 }

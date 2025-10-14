@@ -1,39 +1,44 @@
+:root {
+  --navbar-height: 100px;
+}
+
 .movie-detail {
   max-width: 1000px;
-  margin: 20px auto;
-  padding: 20px;
+  margin: 0 auto;
+  padding: calc(var(--navbar-height) + 20px) 20px 20px 20px; /* huomioi navbar */
   background: rgba(0,0,0,0.55);
   border-radius: 10px;
   box-shadow: 0 0 10px rgba(255,255,255,0.35);
   color: #fff;
 }
 
-
 .movie-detail > * + * { margin-top: 18px; }
-
 
 .movie-header {
   display: flex;
   gap: 20px;
   align-items: flex-start;
+  flex-wrap: wrap; /* lisää wrap responsiivisuutta varten */
 }
 
 .poster-wrap { flex-shrink: 0; }
+
 .movie-poster {
-  width: 190px;              
+  width: 190px;
   height: auto;
   border-radius: 8px;
   box-shadow: 0 6px 16px rgba(0,0,0,0.5);
   display: block;
 }
+
 .poster-ph {
-  width: 300px;
+  width: 190px;        
   aspect-ratio: 2/3;
   border-radius: 8px;
   background: #111827;
 }
 
-.movie-info { flex: 1; min-width: 0; } 
+.movie-info { flex: 1; min-width: 0; }
 
 .movie-title {
   margin: 0 0 8px;
@@ -41,13 +46,13 @@
   font-weight: 700;
 }
 
-
 .movie-meta {
   display: flex;
   flex-wrap: wrap;
   gap: 8px;
   margin: 4px 0 12px;
 }
+
 .badge {
   background: rgba(255,255,255,.08);
   border: 1px solid rgba(255,255,255,.12);
@@ -71,6 +76,108 @@
   font-weight: 700;
 }
 
-
 .review-form { margin-top: 8px; }
 
+/* watch providers */
+.watch-providers {
+  display: grid;
+  gap: .5rem;
+  margin: .75rem 0 1rem;
+}
+
+.providers-loading,
+.providers-error,
+.providers-empty {
+  color: #a3a3a3;
+  font-size: .9rem;
+  margin: 0;
+}
+
+.wp-row {
+  display: flex;
+  align-items: center;
+  gap: .5rem;
+}
+
+.wp-label {
+  min-width: 88px;
+  color: #a3a3a3;
+  font-size: .9rem;
+}
+
+.wp-logos {
+  display: flex;
+  flex-wrap: wrap;
+  gap: .4rem .5rem;
+}
+
+.wp-chip {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 42px;
+  height: 42px;
+  border-radius: 10px;
+  background: #141414;
+  border: 1px solid #2b2b2b;
+  transition: transform .12s ease, border-color .12s ease, box-shadow .12s ease;
+}
+
+.wp-chip:hover {
+  transform: translateY(-1px);
+  border-color: #3b3b3b;
+  box-shadow: 0 4px 10px rgba(0,0,0,.35);
+}
+
+.wp-chip img {
+  width: 28px;
+  height: 28px;
+  object-fit: contain;
+}
+
+/* 📱 Mobiili */
+@media (max-width: 480px) {
+  .movie-detail {
+    padding: calc(var(--navbar-height) + 12px) 12px 12px 12px;
+  }
+
+  .movie-header {
+    flex-direction: column;
+    align-items: center;
+    gap: 12px;
+  }
+
+  .movie-poster, .poster-ph {
+    width: 140px;
+  }
+
+  .movie-title {
+    font-size: 1.5rem;
+    text-align: center;
+  }
+
+  .movie-grid {
+    grid-template-columns: 1fr 1fr;
+    gap: 0.75rem;
+  }
+}
+
+/* 📲 Tabletti */
+@media (min-width: 481px) and (max-width: 1024px) {
+  .movie-detail {
+    padding: calc(var(--navbar-height) + 16px) 16px 16px 16px;
+  }
+
+  .movie-header {
+    flex-wrap: wrap;
+  }
+
+  .movie-poster, .poster-ph {
+    width: 160px;
+  }
+
+  .movie-grid {
+    grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+    gap: 1rem;
+  }
+}

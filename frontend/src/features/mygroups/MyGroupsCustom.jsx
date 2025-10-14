@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import ReviewCard from "../reviews/ReviewCard";
 import { finnkinoItemsAPI } from "../../shared/api/finnkinoItems.js";
+import "./MyGroups.css";
 
 
 export function MyGroupsCustom() {
@@ -84,28 +85,32 @@ export function MyGroupsCustom() {
   };
 
   return (
-    <div style={{ color: "#255" }}>
+    <div className="mygroups-page">
       <h1>My Groups</h1>
 
       {loading ? (
-        <p>Loading groups...</p>
+        <div className="loading-state">
+          <p>Loading groups...</p>
+        </div>
       ) : groups.length === 0 ? (
-        <p>You are not a member of any groups.</p>
+        <div className="empty-state">
+          <p>You are not a member of any groups.</p>
+        </div>
       ) : (
         <>
-          <div style={{ marginBottom: "20px" }}>
-            <label>
-              Select Group:&nbsp;
+          <div className="group-selector">
+            <label className="selector-label">
+              Select Group:
               <select
                 value={selectedGroup || ""}
                 onChange={(e) => setSelectedGroup(e.target.value)}
-                style={{ color: "#000", background: "#fff", padding: "4px" }}
+                className="input"
               >
-                <option value="" style={{ color: "#000" }}>
+                <option value="">
                   Choose a group...
                 </option>
                 {groups.map((group) => (
-                  <option key={group.id} value={group.id} style={{ color: "#000" }}>
+                  <option key={group.id} value={group.id}>
                     {group.name}
                   </option>
                 ))}
@@ -115,7 +120,7 @@ export function MyGroupsCustom() {
 
           <div style={{ marginTop: "10px" }}>
             <h2>Reviews in Groups</h2>
-            <h3>Group id : {selectedGroup}</h3>
+          {/* <h3>Group id : {selectedGroup}</h3> */}
             {reviews.length === 0 ? (
               <p>No pinned reviews in this group yet.</p>
             ) : (
@@ -147,12 +152,9 @@ export function MyGroupsCustom() {
                       border: "1px solid #ccc", 
                       padding: "15px", 
                       borderRadius: "8px",
-                      backgroundColor: "red",
                       boxShadow: "0 2px 4px rgba(0,0,0,0.1)"
                     }}>
-                      <h4 style={{ margin: "0 0 10px 0", fontSize: "14px", color: "#666" }}>
-                        Pinned Review:
-                      </h4>
+                 
                       <ReviewCard review={reviewData} />
                       <p style={{ 
                         fontSize: "12px", 
@@ -168,17 +170,14 @@ export function MyGroupsCustom() {
             )}
           </div>
 
-          <div style={{ marginTop: "20px" }}>
-            <h2>Invites to finnkino movies</h2>
+          <div className="finnkino-section">
+            <h2>Invites to Finnkino Movies</h2>
             {finnkinoItems.length === 0 ? (
-              <p>No invites to finnkino movies in this group yet.</p>
+              <div className="empty-reviews">
+                <p>No invites to finnkino movies in this group yet.</p>
+              </div>
             ) : (
-              <div style={{ 
-                display: "flex", 
-                flexDirection: "column", 
-                gap: "15px", 
-                padding: "10px 0"
-              }}>
+              <div className="finnkino-items-grid">
                 {finnkinoItems.map((item) => {
                   let finnkinoData;
                   try {
@@ -189,14 +188,8 @@ export function MyGroupsCustom() {
                   }
                   
                   return (
-                    <div key={item.id} style={{ 
-                      border: "1px solid #ccc", 
-                      padding: "15px", 
-                      borderRadius: "8px",
-                      backgroundColor: "#f9f9f9",
-                      boxShadow: "0 2px 4px rgba(0,0,0,0.1)"
-                    }}>
-                      <h4 style={{ margin: "0 0 10px 0", color: "#333" }}>
+                    <div key={item.id} className="finnkino-item-card">
+                      <h4>
                         🎬 {finnkinoData.movie || 'Movie Invitation'}
                       </h4>
                       {finnkinoData.theatre && (
@@ -212,29 +205,17 @@ export function MyGroupsCustom() {
                       )}
                       {finnkinoData.invitationText && (
                         <p>
-                          <strong>Inivite message:</strong> {finnkinoData.invitationText}
+                          <strong>Invite message:</strong> {finnkinoData.invitationText}
                         </p>
                       )}
-                       <p>
+                      <p>
                         <strong>From user:</strong> {item.added_by_email}
                       </p>
 
                       <button 
                         onClick={() => deleteFinnkinoItem(item.id)}
-                        style={{
-                          backgroundColor: '#ff4444',
-                          color: 'white',
-                          border: 'none',
-                          padding: '8px 16px',
-                          borderRadius: '4px',
-                          cursor: 'pointer',
-                          fontSize: '14px',
-                          fontWeight: '500',
-                          marginTop: '10px',
-                          transition: 'background-color 0.2s ease'
-                        }}
-                        onMouseOver={(e) => e.target.style.backgroundColor = '#cc3333'}
-                        onMouseOut={(e) => e.target.style.backgroundColor = '#ff4444'}
+                        className="btn btn-outline"
+                        style={{backgroundColor: '#ff4444', color: 'white', borderColor: '#ff4444'}}
                       >
                         Remove this invite
                       </button>

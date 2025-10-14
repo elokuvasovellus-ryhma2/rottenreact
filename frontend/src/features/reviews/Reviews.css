@@ -4,6 +4,11 @@
   padding: 1rem;
 }
 
+.reviews-page {
+  max-width: 1100px;
+  margin: 0 auto;
+  padding: calc(var(--navbar-height) + 16px) 1rem 1rem 1rem; /* yläpaddiksi navin korkeus + 16px */
+}
 
 .header {
   display: flex;
@@ -11,7 +16,7 @@
   justify-content: space-between;
   gap: 12px;
   border-bottom: 1px solid #2b2b2b;
-  padding: .75rem 0;
+  padding: 0.75rem 0;
   margin-bottom: 1rem;
 }
 
@@ -98,6 +103,15 @@
   cursor: not-allowed;
 }
 
+h1 {
+  font-size: 2rem;
+  font-weight: 700;
+  margin: 0;
+}
+
+.sort select {
+  margin-left: 0.5rem;
+}
 
 .grid {
   display: grid;
@@ -120,5 +134,30 @@
   }
   .header .controls {
     margin-left: 0;
+  }
+}
+.error {
+  color: #b91c1c;
+}
+
+/* 📱 Mobiili */
+@media (max-width: 480px) {
+  .reviews-page {
+    padding: calc(var(--navbar-height) + 12px) 12px 12px 12px;
+  }
+
+  .grid {
+    grid-template-columns: 1fr; /* yksi kortti per rivi mobiilissa */
+  }
+}
+
+/* 📲 Tabletti */
+@media (min-width: 481px) and (max-width: 1024px) {
+  .reviews-page {
+    padding: calc(var(--navbar-height) + 14px) 16px 16px 16px;
+  }
+
+  .grid {
+    grid-template-columns: repeat(auto-fill, minmax(180px, 1fr)); /* pienempiä kortteja useampi per rivi */
   }
 }

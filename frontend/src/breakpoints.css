@@ -1,0 +1,68 @@
+/* 🎯 Yhteiset rajat: mobiili, tabletti, desktop */
+:root {
+  --mobile: 480px;     /* puhelimet */
+  --tablet: 1024px;     /* tabletit, esim. iPad Air portrait */
+  --desktop: 1024px;   /* pienet läppärit ja ylöspäin */
+  --container-max: 1200px; /* iso desktop */
+}
+
+//* 📱 Mobiili */
+@media (max-width: 480px) {
+  nav {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    background: #111;
+  }
+
+  nav ul {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+    gap: 0.5rem;
+    margin: 0;
+    padding: 0 10px;
+    list-style: none;
+  }
+
+  nav li a {
+    display: block;
+    padding: 8px 12px;
+    color: white;
+    text-decoration: none;
+    background: #111;
+    border-radius: 4px;
+  }
+
+  nav li a:hover {
+    background: #333;
+  }
+}
+/* 📲 Tabletti */
+@media (min-width: 481px) and (max-width: 1024px) {
+  .main-content {
+    padding: var(--navbar-height) 16px 32px;
+  }
+
+  .container,
+  .container-fluid {
+    max-width: 80%;
+    margin-inline: auto;
+    padding-inline: 16px;
+  }
+
+  nav ul {
+    flex-wrap: wrap;
+    justify-content: center;
+  }
+}
+
+/* 🖥️ Desktop */
+@media (min-width: 1025px) {
+  .container,
+  .container-fluid {
+    max-width: var(--container-max);
+    margin-inline: auto;
+  }
+}

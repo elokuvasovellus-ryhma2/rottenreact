@@ -45,19 +45,27 @@ export default function AllMovies({
   };
 
   
-  useEffect(() => {
-    setLoading(true);
-    fetch(buildUrl(currentPage), {
-      headers: { Authorization: `Bearer ${token}` },
+useEffect(() => {
+  setLoading(true);
+  fetch(buildUrl(currentPage), {
+    headers: { Authorization: `Bearer ${token}` },
+  })
+    .then(res => res.json())
+    .then(data => {
+      let results = data.results || [];
+
+      if (year) {
+        results = results.filter(movie =>
+          movie.release_date?.startsWith(year)
+        );
+      }
+
+      setMovies(results);
+      setTotalPages(data.total_pages || 0);
     })
-      .then(res => res.json())
-      .then(data => {
-        setMovies(data.results || []);
-        setTotalPages(data.total_pages || 0);
-      })
-      .catch(console.error)
-      .finally(() => setLoading(false));
-  }, [query, year, genre, currentPage, token]);
+    .catch(console.error)
+    .finally(() => setLoading(false));
+}, [query, year, genre, currentPage, token]);
 
   const handleMovieClick = id => navigate(`/movies/${id}`);
   const handlePrev       = () => setCurrentPage(p => Math.max(1, p - 1));

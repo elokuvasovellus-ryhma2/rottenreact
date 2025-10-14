@@ -1,0 +1,177 @@
+:root {
+  --navbar-height: 100px; /* Navbarin korkeus */
+}
+
+/* Groups page container */
+.groups-page {
+  max-width: 1100px;
+  margin: 0 auto;
+  padding: calc(var(--navbar-height) + 20px) 20px 20px 20px; /* huomioi navbar */
+  background: rgba(0,0,0,0.55);
+  border-radius: 10px;
+  box-shadow: 0 0 10px rgba(255,255,255,0.35);
+  color: #fff;
+}
+
+/* Form group styling */
+.form-group {
+  display: flex;
+  gap: 12px;
+  margin-bottom: 20px;
+}
+
+.form-group .input {
+  flex: 1;
+}
+
+.form-group .btn {
+  white-space: nowrap;
+}
+
+/* Action section */
+.action-section {
+  text-align: center;
+  margin-top: 24px;
+}
+
+/* No results styling */
+.no-results {
+  text-align: center;
+  color: #a3a3a3;
+  font-style: italic;
+  padding: 20px;
+  background: rgba(255, 255, 255, 0.2);
+  border-radius: 8px;
+  border: 1px solid rgba(255,255,255,0.3);
+}
+
+/* Group creation form */
+.group-form {
+  background: rgba(255, 255, 255, 0.2);
+  border: 1px solid rgba(255,255,255,0.3);
+  border-radius: 10px;
+  padding: 24px;
+  margin-bottom: 24px;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.5);
+}
+
+.group-form h2 {
+  color: #0BA6DF;
+  font-size: 28px;
+  font-weight: 700;
+  margin-bottom: 16px;
+}
+
+.group-form input {
+  width: 100%;
+  padding: 12px 16px;
+  border: 1px solid rgba(255,255,255,0.3);
+  border-radius: 8px;
+  background: rgba(255,255,255,0.1);
+  color: #fff;
+  font-size: 16px;
+  margin-bottom: 16px;
+}
+
+.group-form button {
+  background: #0BA6DF;
+  color: white;
+  border: none;
+  padding: 12px 24px;
+  border-radius: 8px;
+  font-size: 16px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.group-form button:hover {
+  background: #0781b8;
+}
+
+/* Search section */
+.search-section {
+  background: rgba(255, 255, 255, 0.1);
+  border: 1px solid rgba(255,255,255,0.3);
+  border-radius: 10px;
+  padding: 24px;
+  margin-bottom: 24px;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.5);
+}
+
+.search-section h3 {
+  color: #0BA6DF;
+  font-size: 22px;
+  font-weight: 600;
+  margin-bottom: 16px;
+}
+
+.search-results {
+  margin-top: 16px;
+}
+
+.search-result-item {
+  background: rgba(255, 255, 255, 0.1);
+  border: 1px solid rgba(255,255,255,0.3);
+  border-radius: 8px;
+  padding: 12px;
+  margin-bottom: 12px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.search-result-item:hover {
+  background: rgba(11, 166, 223, 0.1);
+  border-color: #0BA6DF;
+}
+
+.search-result-item.selected {
+  background: rgba(11, 166, 223, 0.2);
+  border-color: #0781b8;
+}
+
+/* Feedback messages */
+.feedback {
+  padding: 12px;
+  border-radius: 8px;
+  margin-bottom: 16px;
+  font-size: 14px;
+}
+
+.feedback.success {
+  background: rgba(34, 197, 94, 0.1);
+  color: #16a34a;
+  border: 1px solid rgba(34, 197, 94, 0.3);
+}
+
+.feedback.error {
+  background: rgba(239, 68, 68, 0.1);
+  color: #dc2626;
+  border: 1px solid rgba(239, 68, 68, 0.3);
+}
+
+/* 📱 Mobiili */
+@media (max-width: 480px) {
+  .groups-page {
+    padding: calc(var(--navbar-height) + 12px) 12px 12px 12px;
+  }
+
+  .group-form, .search-section {
+    padding: 16px;
+  }
+
+  .group-form h2, .search-section h3 {
+    text-align: center;
+  }
+}
+
+/* 📲 Tabletti */
+@media (min-width: 481px) and (max-width: 1024px) {
+  .groups-page {
+    padding: calc(var(--navbar-height) + 16px) 16px 16px 16px;
+  }
+
+  .group-form, .search-section {
+    padding: 20px;
+  }
+}

@@ -93,69 +93,88 @@ export default function Groups() {
   };
 
   return (
-    <div className="groups-container">
-      <h2>Make a new group</h2>
-      <div className="group-input">
-        <input
-          type="text"
-          placeholder="Group name"
-          value={newGroupName}
-          onChange={(e) => setNewGroupName(e.target.value)}
-          onKeyDown={(e) => e.key === "Enter" && handleCreateConfirm()}
-        />
-        <button onClick={handleCreateConfirm}>Confirm</button>
+    <div className="groups-page">
+      <div className="group-form">
+        <h2>Create New Group</h2>
+        <div className="form-group">
+          <input
+            type="text"
+            placeholder="Enter group name"
+            value={newGroupName}
+            onChange={(e) => setNewGroupName(e.target.value)}
+            onKeyDown={(e) => e.key === "Enter" && handleCreateConfirm()}
+            className="input"
+          />
+          <button 
+            onClick={handleCreateConfirm}
+            className="btn btn-primary"
+            disabled={!newGroupName.trim()}
+          >
+            Create Group
+          </button>
+        </div>
       </div>
 
-      <h2>Search for a group</h2>
-      <div className="group-input2">
-        <input
-          type="text"
-          placeholder="Group name"
-          value={searchQuery}
-          onChange={(e) => setSearchQuery(e.target.value)}
-          onKeyDown={(e) => e.key === "Enter" && handleSearchConfirm()}
-        />
-        <button onClick={handleSearchConfirm}>Confirm</button>
-      </div>
+      <div className="search-section">
+        <h3>Search for Groups</h3>
+        <div className="form-group">
+          <input
+            type="text"
+            placeholder="Search group name"
+            value={searchQuery}
+            onChange={(e) => setSearchQuery(e.target.value)}
+            onKeyDown={(e) => e.key === "Enter" && handleSearchConfirm()}
+            className="input"
+          />
+          <button 
+            onClick={handleSearchConfirm}
+            className="btn btn-secondary"
+            disabled={!searchQuery.trim()}
+          >
+            Search
+          </button>
+        </div>
 
-      <div className="group-box">
-        {searchResults.length === 0 ? (
-          <p className="muted">No groups.</p>
-        ) : (
-          <ul className="group-list">
-            {searchResults.map((g) => (
-              <li key={g.id} className="group-row">
-                <span className="name">{g.name}</span>
-                <label className="check">
+        <div className="search-results">
+          {searchResults.length === 0 ? (
+            <p className="no-results">No groups found.</p>
+          ) : (
+            <div className="group-list">
+              {searchResults.map((g) => (
+                <div 
+                  key={g.id} 
+                  className={`search-result-item ${selectedId === g.id ? 'selected' : ''}`}
+                  onClick={() => setSelectedId(g.id)}
+                >
+                  <span className="group-name">{g.name}</span>
                   <input
                     type="radio"
                     name="groupSelect"
                     checked={selectedId === g.id}
                     onChange={() => setSelectedId(g.id)}
+                    className="group-radio"
                   />
-                  <span>Select</span>
-                </label>
-              </li>
-            ))}
-          </ul>
-        )}
+                </div>
+              ))}
+            </div>
+          )}
+        </div>
       </div>
 
-      <button
-        onClick={handleSendJoinRequest}
-        disabled={!selectedId || sending}
-      >
-        {sending ? "Sending..." : "Send join request"}
-      </button>
+      {selectedId && (
+        <div className="action-section">
+          <button
+            className="btn btn-accent btn-lg"
+            onClick={handleSendJoinRequest}
+            disabled={sending}
+          >
+            {sending ? "Sending Request..." : "Send Join Request"}
+          </button>
+        </div>
+      )}
 
       {feedback && (
-        <div
-          style={{
-            marginTop: 8,
-            fontSize: 14,
-            color: feedback.type === "error" ? "#dc2626" : "#16a34a",
-          }}
-        >
+        <div className={`feedback ${feedback.type}`}>
           {feedback.text}
         </div>
       )}

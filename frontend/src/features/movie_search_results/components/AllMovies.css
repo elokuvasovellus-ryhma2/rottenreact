@@ -1,3 +1,7 @@
+:root {
+  --navbar-height: 100px;
+}
+
 body {
   margin: 0;
   background-color: #121212;
@@ -37,6 +41,7 @@ body {
   gap: 1rem;
   margin-top: 20px;
 }
+  
 
 
 .movie-card {
@@ -102,4 +107,66 @@ body {
 
 .pagination span {
   font-size: 1.1rem;
+}
+/* 📱 Mobiili: max 480px */
+@media (max-width: 480px) {
+  .filter-section {
+    flex-direction: column;   /* filterit pinoutuvat pystysuoraan */
+    align-items: stretch;
+    gap: 8px;
+  }
+
+  .filter-section select,
+  .filter-section input,
+  .filter-section button {
+    width: 100%;              /* elementit koko leveydelle */
+    font-size: 0.95rem;
+    padding: 10px;
+  }
+
+  .movie-grid {
+    grid-template-columns: 1fr 1fr; /* kaksi korttia rinnakkain */
+    gap: 0.75rem;
+  }
+
+  .movie-card .card-title {
+    font-size: 0.8rem;        /* otsikko pienemmäksi mobiilissa */
+  }
+
+  .no-image {
+    height: 200px;            /* placeholder pienemmäksi */
+  }
+
+  .pagination {
+    flex-direction: column;   /* napit allekkain */
+    gap: 10px;
+  }
+
+  .pagination button {
+    width: 100%;              /* napit koko leveydelle */
+  }
+}
+
+Tabletti: 481px–1024px */
+@media (min-width: 481px) and (max-width: 1024px) {
+  .main-content {
+    padding: var(--navbar-height) 16px 32px;
+  }
+
+  .container,
+  .container-fluid {
+    max-width: 80%;
+    margin-inline: auto;
+    padding-inline: 16px;
+  }
+
+  .movie-grid {
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 1rem;
+  }
+
+  nav ul {
+    flex-wrap: wrap;           /* navigaatio voi jakautua kahdelle riville */
+    justify-content: center;
+  }
 }

@@ -30,11 +30,15 @@ export async function createGroup(req, res) {
  
       // Commit the transaction
       await pool.query('COMMIT');
- 
       return res.status(201).json({ message: "Ryhmä luotu", group });
     } catch (error) {
-      // Rollback the transaction if any operation fails
       await pool.query('ROLLBACK');
+
+      // Handle error
+      if (error.code === "23505") {
+        return res.status(409).json({ error: "A group with this name already exists." });
+      }
+
       throw error;
     }
   } catch (e) {
@@ -43,13 +47,12 @@ export async function createGroup(req, res) {
   }
 }
 
-
 export async function getUserGroups(req, res) {
   try {
     const { userId } = req.params;
     const q = (req.query.q || "").trim();
 
-    // GLOBAALI HAKU: /Group/user-groups/all[?q=...]
+   
     if (userId === "all") {
       if (q) {
         const { rows } = await pool.query(

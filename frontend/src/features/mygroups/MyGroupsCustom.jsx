@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import ReviewCard from "../reviews/ReviewCard";
+import { finnkinoItemsAPI } from "../../shared/api/finnkinoItems.js";
 
 
 export function MyGroupsCustom() {
@@ -13,6 +14,7 @@ export function MyGroupsCustom() {
   const [selectedGroup, setSelectedGroup] = useState(null);
   const [loading, setLoading] = useState(false);
   const [reviews, setReviews] = useState([]);
+  const [finnkinoItems, setFinnkinoItems] = useState([]);
 
 
   // Hae käyttäjän kaikki ryhmät
@@ -21,12 +23,14 @@ export function MyGroupsCustom() {
     fetchUserGroups();
   }, [userId]);
 
-  // Fetch pinned reviews when a group is selected
+  // Fetch pinned reviews and finnkino items when a group is selected
   useEffect(() => {
     if (selectedGroup) {
       fetchReviewsFromGroup();
+      fetchFinnkinoItems();
     } else {
       setReviews([]);
+      setFinnkinoItems([]);
     }
   }, [selectedGroup]);
 
@@ -55,6 +59,27 @@ export function MyGroupsCustom() {
     } catch (error) {
       console.error('Error fetching pinned reviews:', error);
       setReviews([]);
+    }
+  };
+
+  const fetchFinnkinoItems = async () => {
+    if (!selectedGroup) return;
+    try {
+      const data = await finnkinoItemsAPI.getItems(selectedGroup);
+      setFinnkinoItems(data || []);
+      console.log('Finnkino items:', data);
+    } catch (error) {
+      console.error('Error fetching finnkino items:', error);
+      setFinnkinoItems([]);
+    }
+  };
+
+  const deleteFinnkinoItem = async (itemId) => {
+    try {
+      await finnkinoItemsAPI.deleteItem(itemId, userId);
+      fetchFinnkinoItems();
+    } catch (error) {
+      console.error('Error deleting finnkino item:', error);
     }
   };
 
@@ -89,7 +114,7 @@ export function MyGroupsCustom() {
           </div>
 
           <div style={{ marginTop: "10px" }}>
-            <h2>Pinned Reviews in Group</h2>
+            <h2>Reviews in Groups</h2>
             <h3>Group id : {selectedGroup}</h3>
             {reviews.length === 0 ? (
               <p>No pinned reviews in this group yet.</p>
@@ -143,7 +168,82 @@ export function MyGroupsCustom() {
             )}
           </div>
 
+          <div style={{ marginTop: "20px" }}>
+            <h2>Invites to finnkino movies</h2>
+            {finnkinoItems.length === 0 ? (
+              <p>No invites to finnkino movies in this group yet.</p>
+            ) : (
+              <div style={{ 
+                display: "flex", 
+                flexDirection: "column", 
+                gap: "15px", 
+                padding: "10px 0"
+              }}>
+                {finnkinoItems.map((item) => {
+                  let finnkinoData;
+                  try {
+                    finnkinoData = JSON.parse(item.display_text);
+                  } catch {
+                    // Fallback for simple text
+                    finnkinoData = { movie: item.display_text };
+                  }
+                  
+                  return (
+                    <div key={item.id} style={{ 
+                      border: "1px solid #ccc", 
+                      padding: "15px", 
+                      borderRadius: "8px",
+                      backgroundColor: "#f9f9f9",
+                      boxShadow: "0 2px 4px rgba(0,0,0,0.1)"
+                    }}>
+                      <h4 style={{ margin: "0 0 10px 0", color: "#333" }}>
+                        🎬 {finnkinoData.movie || 'Movie Invitation'}
+                      </h4>
+                      {finnkinoData.theatre && (
+                        <p>
+                          <strong>Theatre:</strong> {finnkinoData.theatre}
+                          {finnkinoData.auditorium && ` (${finnkinoData.auditorium})`}
+                        </p>
+                      )}
+                      {finnkinoData.showtime && (
+                        <p>
+                          <strong>Time:</strong> {new Date(finnkinoData.showtime).toLocaleString('fi-FI')}
+                        </p>
+                      )}
+                      {finnkinoData.invitationText && (
+                        <p>
+                          <strong>Inivite message:</strong> {finnkinoData.invitationText}
+                        </p>
+                      )}
+                       <p>
+                        <strong>From user:</strong> {item.added_by_email}
+                      </p>
 
+                      <button 
+                        onClick={() => deleteFinnkinoItem(item.id)}
+                        style={{
+                          backgroundColor: '#ff4444',
+                          color: 'white',
+                          border: 'none',
+                          padding: '8px 16px',
+                          borderRadius: '4px',
+                          cursor: 'pointer',
+                          fontSize: '14px',
+                          fontWeight: '500',
+                          marginTop: '10px',
+                          transition: 'background-color 0.2s ease'
+                        }}
+                        onMouseOver={(e) => e.target.style.backgroundColor = '#cc3333'}
+                        onMouseOut={(e) => e.target.style.backgroundColor = '#ff4444'}
+                      >
+                        Remove this invite
+                      </button>
+                    </div>
+                  );
+                })}
+              </div>
+            )}
+          </div>
 
           
         </>

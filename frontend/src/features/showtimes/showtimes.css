@@ -1,13 +1,9 @@
-/* showtimes.css */
-
-/* Root-muuttuja navin korkeudelle */
 :root {
   --navbar-height: 100px;
 }
 
-/* Lista kokonaisuudessaan */
 .showtimes {
-  padding-top: calc(var(--navbar-height) + 16px); /* siirtää sisällön navin alapuolelle */
+  padding-top: calc(var(--navbar-height) + 16px);
   max-width: 800px;
   margin: 0 auto;
   padding-left: 24px;
@@ -16,21 +12,18 @@
   font-family: 'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif;
 }
 
-/* Yksittäinen showtime-rivi */
 .showtimes li {
   display: flex;
-  align-items: center;
-  align-items: flex-start; /* korjattu 'normal' -> 'flex-start' */
+  align-items: flex-start;
   gap: 10px;
   margin-bottom: 20px;
   padding: 10px;
   border: 1px solid #eee;
   border-radius: 5px;
   background-color: #f9f9f9;
-
-  color: #0BA6DF; 
+  color: #0BA6DF;
   font-size: 20px;
-  font-family:'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif
+  font-family: 'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif;
 }
 
 .showtimes li span {
@@ -236,10 +229,8 @@
   border-color: #0BA6DF;
   box-shadow: 0 0 5px rgba(11, 166, 223, 0.3);
 }
-}
 
-/* Vastaa eri näyttöjä */
-/* Mobiili */
+/* Responsiivisuus */
 @media (max-width: 480px) {
   .showtimes {
     padding-left: 12px;
@@ -248,12 +239,11 @@
 
   .showtimes li {
     font-size: 16px;
-    flex-direction: column; /* pinoutuu pystysuoraan pienellä näytöllä */
+    flex-direction: column;
     gap: 6px;
   }
 }
 
-/* Tabletti */
 @media (min-width: 481px) and (max-width: 1024px) {
   .showtimes {
     padding-left: 16px;
@@ -265,7 +255,6 @@
   }
 }
 
-/* Desktop (oletus) */
 @media (min-width: 1025px) {
   .showtimes li {
     font-size: 20px;

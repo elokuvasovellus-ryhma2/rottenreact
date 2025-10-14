@@ -8,9 +8,7 @@
   color: #fff;
 }
 
-
 .movie-detail > * + * { margin-top: 18px; }
-
 
 .movie-header {
   display: flex;
@@ -19,21 +17,23 @@
 }
 
 .poster-wrap { flex-shrink: 0; }
+
 .movie-poster {
-  width: 190px;              
+  width: 190px;
   height: auto;
   border-radius: 8px;
   box-shadow: 0 6px 16px rgba(0,0,0,0.5);
   display: block;
 }
+
 .poster-ph {
-  width: 300px;
+  width: 190px;        
   aspect-ratio: 2/3;
   border-radius: 8px;
   background: #111827;
 }
 
-.movie-info { flex: 1; min-width: 0; } 
+.movie-info { flex: 1; min-width: 0; }
 
 .movie-title {
   margin: 0 0 8px;
@@ -41,13 +41,13 @@
   font-weight: 700;
 }
 
-
 .movie-meta {
   display: flex;
   flex-wrap: wrap;
   gap: 8px;
   margin: 4px 0 12px;
 }
+
 .badge {
   background: rgba(255,255,255,.08);
   border: 1px solid rgba(255,255,255,.12);
@@ -71,6 +71,79 @@
   font-weight: 700;
 }
 
-
 .review-form { margin-top: 8px; }
 
+
+
+.watch-providers {
+  display: grid;
+  gap: .5rem;
+  margin: .75rem 0 1rem;
+}
+
+.providers-loading,
+.providers-error,
+.providers-empty {
+  color: #a3a3a3;
+  font-size: .9rem;
+  margin: 0;
+}
+
+.wp-row {
+  display: flex;
+  align-items: center;
+  gap: .5rem;
+}
+
+.wp-label {
+  min-width: 88px;
+  color: #a3a3a3;
+  font-size: .9rem;
+}
+
+.wp-logos {
+  display: flex;
+  flex-wrap: wrap;
+  gap: .4rem .5rem;
+}
+
+.wp-chip {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 42px;
+  height: 42px;
+  border-radius: 10px;
+  background: #141414;
+  border: 1px solid #2b2b2b;
+  transition: transform .12s ease, border-color .12s ease, box-shadow .12s ease;
+}
+
+.wp-chip:hover {
+  transform: translateY(-1px);
+  border-color: #3b3b3b;
+  box-shadow: 0 4px 10px rgba(0,0,0,.35);
+}
+
+.wp-chip img {
+  width: 28px;
+  height: 28px;
+  object-fit: contain;
+}
+
+/*responsiivisuus*/
+@media (max-width: 680px) {
+  .movie-header {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+  .poster-wrap {
+    margin: 0 auto;
+  }
+  .movie-title {
+    font-size: 24px;
+  }
+  .wp-label {
+    min-width: 72px;
+  }
+}
